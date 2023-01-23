@@ -1,8 +1,6 @@
 from dataclasses import dataclass
-from json import JSONEncoder, dumps
+from json import JSONEncoder
 from typing import List
-
-from private_file import INDENT
 
 
 @dataclass
@@ -35,8 +33,8 @@ class Material(JSONEncoder):
     def obj_dict(self):
         return self.__dict__
 
-    def to_json(self):
-        return dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=INDENT)
+    # def to_json(self):
+    #     return dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=INDENT)
 
     # def __init__(
     #         self,

@@ -1,5 +1,5 @@
+from html import unescape
 import logging
-from collections import namedtuple
 from json import JSONDecodeError
 from typing import List
 
@@ -25,8 +25,8 @@ def create_material(material_object: dict) -> Material:
     return Material(**material_object)
 
 
-def custom_material_obj_decoder(material_object: dict):
-    return namedtuple('X', material_object.keys())(*material_object.values())
+# def custom_material_obj_decoder(material_object: dict):
+#     return namedtuple('X', material_object.keys())(*material_object.values())
 
 
 class DkcObj:
@@ -61,8 +61,6 @@ class DkcObj:
         for material_code in material_codes:
             material_response = get_material_response(material_code)
 
-            print(material_response.content.decode('utf-8'))
-
             json_obj = None
             try:
                 json_obj = material_response.json()
@@ -70,6 +68,7 @@ class DkcObj:
                 print(err.args)
 
             if json_obj:
+                # print(unescape(material_response.content.decode(material_response.encoding)))
                 material_obj = json_obj.get('material')
                 material = create_material(material_obj)
                 result.append(material)
