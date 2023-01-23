@@ -61,6 +61,8 @@ class DkcObj:
         for material_code in material_codes:
             material_response = get_material_response(material_code)
 
+            print(material_response.content.decode('utf-8'))
+
             json_obj = None
             try:
                 json_obj = material_response.json()
