@@ -1,8 +1,11 @@
+import dataclasses
 import json
 from pprint import PrettyPrinter
 
 from dkc_obj import DkcObj
 from private_file import HEADERS, INDENT
+
+PRINT_TO_CONSOLE = False
 
 if __name__ == '__main__':
     dkc = DkcObj()
@@ -11,11 +14,11 @@ if __name__ == '__main__':
 
         material_codes = ['4400003']
         materials = dkc.get_materials(material_codes)
-        if materials:
-            pretty_print = PrettyPrinter(indent=INDENT - 2)
+        if materials and PRINT_TO_CONSOLE:
+            pretty_print = PrettyPrinter(indent=2)
             print(pretty_print.pprint(materials))
         json_data = json.dumps(
-            [material.__dict__ for material in materials],
+            [dataclasses.asdict(material) for material in materials],
             indent=INDENT,
             ensure_ascii=False
         )

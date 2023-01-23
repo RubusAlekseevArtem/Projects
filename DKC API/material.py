@@ -1,89 +1,71 @@
 from dataclasses import dataclass
-from json import JSONEncoder
 from typing import List
 
 
 @dataclass
-class Material(JSONEncoder):
-    id: int = None,
-    node_id: int = None,
-    etim_class_id: str = None,
-    name: str = None,
-    type: str = None,
-    series: str = None,
-    country: str = None,
-    unit: str = None,
-    volume: float = None,
-    weight: float = None,
-    code: str = None,
-    url: str = None,
-    price: float = None,
-    no_price: bool = None,
-    barcode: List[str] = None,
-    thumbnail_url: str = None,
-    additional_images: List[str] = None,
-    attributes: dict = None,
-    etim_attributes: dict = None,
-    packing: dict = None,
-    avg_delivery: dict = None,
-    accessories: List[str] = None,
-    accessories_codes: List[str] = None,
-    sale: List = None
+class Certificate:
+    id: int | None = None,
+    name: str | None = None,
+    src: str | None = None,
+    type: str | None = None,
+    number: str | None = None,
+    start_date: int | None = None,
+    expiration_date: int | None = None,
+    node_ids: List[int] | None = None,
+    item_ids: List[int] | None = None,
+    item_full_codes: List[str] | None = None,
 
-    def obj_dict(self):
-        return self.__dict__
 
-    # def to_json(self):
-    #     return dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=INDENT)
+@dataclass
+class Video:
+    url: str | None = None,
+    cover: str | None = None,
+    type: str | None = None,
 
-    # def __init__(
-    #         self,
-    #         id: int = None,
-    #         node_id: int = None,
-    #         etim_class_id: str = None,
-    #         name: str = None,
-    #         type: str = None,
-    #         series: str = None,
-    #         country: str = None,
-    #         unit: str = None,
-    #         volume: float = None,
-    #         weight: float = None,
-    #         code: str = None,
-    #         url: str = None,
-    #         price: float = None,
-    #         no_price: bool = None,
-    #         barcode: List[str] = None,
-    #         thumbnail_url: str = None,
-    #         additional_images: List[str] = None,
-    #         attributes: dict = None,
-    #         etim_attributes: dict = None,
-    #         packing: dict = None,
-    #         avg_delivery: dict = None,
-    #         accessories: List[str] = None,
-    #         accessories_codes: List[str] = None,
-    #         sale: List = None,
-    # ):
-    #     self.weight = weight
-    #     self.code = code
-    #     self.url = url
-    #     self.price = price
-    #     self.no_price = no_price
-    #     self.barcode = barcode
-    #     self.thumbnail_url = thumbnail_url
-    #     self.additional_images = additional_images
-    #     self.attributes = attributes
-    #     self.etim_attributes = etim_attributes
-    #     self.packing = packing
-    #     self.avg_delivery = avg_delivery
-    #     self.accessories = accessories
-    #     self.sale = sale
-    #     self.accessories_codes = accessories_codes
-    #     self.volume = volume
-    #     self.unit = unit
-    #     self.country = country
-    #     self.series = series
-    #     self.type = type
-    #     self.name = name
-    #     self.etim_class_id = etim_class_id
-    #     self.node_id = node_id
-    #     self.id = id
+
+@dataclass
+class Material:
+    id: int | None = None,
+    node_id: int | None = None,
+    etim_class_id: str | None = None,
+    name: str | None = None,
+    type: str | None = None,
+    series: str | None = None,
+    country: str | None = None,
+    unit: str | None = None,
+    volume: float | None = None,
+    weight: float | None = None,
+    code: str | None = None,
+    url: str | None = None,
+    price: float | None = None,
+    no_price: bool | None = None,
+    barcode: List[str] | None = None,
+    thumbnail_url: str | None = None,
+    additional_images: List[str] | None = None,
+    attributes: dict | None = None,
+    etim_attributes: dict | None = None,
+    packing: dict | None = None,
+    avg_delivery: dict | None = None,
+    accessories: List[str] | None = None,
+    accessories_codes: List[str] | None = None,
+    sale: List | None = None,
+
+
+@dataclass
+class MaterialRecord:
+    material: Material | None = None
+    certificates: List[Certificate] | None = None
+    videos: List[Video] | None = None
+
+
+def create_material_record(
+        material_data: dict,
+        material_certificates: List[dict],
+        material_videos: List[dict],
+) -> MaterialRecord:
+    # material_object.pop('sale') # test unpacking
+    record = MaterialRecord()
+    record.material = Material(**material_data)
+    record.certificates = [Certificate(**material_certificate) for material_certificate in material_certificates]
+    record.videos = [Video(**material_video) for material_video in material_videos]
+    return record

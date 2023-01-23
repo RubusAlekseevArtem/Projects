@@ -1,32 +1,55 @@
-from html import unescape
 import logging
 from json import JSONDecodeError
 from typing import List
 
 from requests import HTTPError, get
 
-from material import Material
+from material import Material, MaterialRecord, create_material_record
 from private_file import HEADERS, BASE_URL, MASTER_KEY
 
 
 def get_material_response(material_code: str):
-    response = None
     material_url = f'{BASE_URL}/catalog/material?code={material_code}'
-    logging.info(f'Get response from : {material_url}')
+    logging.info(f'Get material from : {material_url}')
     try:
-        response = get(material_url, headers=HEADERS)
+        return get(material_url, headers=HEADERS)
     except Exception as err:
         logging.error(err.args)
-    return response
+    return None
 
 
-def create_material(material_object: dict) -> Material:
-    # material_object.pop('sale') # test unpacking
-    return Material(**material_object)
+def get_certificates_response(material_code: str):
+    material_url = f'{BASE_URL}/catalog/material/certificates?code={material_code}'
+    logging.info(f'Get material certificates from : {material_url}')
+    try:
+        return get(material_url, headers=HEADERS)
+    except Exception as err:
+        logging.error(err.args)
+    return None
 
 
-# def custom_material_obj_decoder(material_object: dict):
-#     return namedtuple('X', material_object.keys())(*material_object.values())
+def get_videos_response(material_code: str):
+    material_url = f'{BASE_URL}/catalog/material/video?code={material_code}'
+    logging.info(f'Get material video response from : {material_url}')
+    try:
+        return get(material_url, headers=HEADERS)
+    except Exception as err:
+        logging.error(err.args)
+    return None
+
+
+def get_material(material_code: str) -> MaterialRecord:
+    material_response = get_material_response(material_code)
+    material_certificates = get_certificates_response(material_code)
+    material_videos = get_videos_response(material_code)
+    try:
+        material_json = material_response.json().get('material')
+        material_certificates_json = material_certificates.json()
+        material_videos_json = material_videos.json().get('video').get(material_code)
+        # print(unescape(material_response.content.decode(material_response.encoding)))
+        return create_material_record(material_json, material_certificates_json, material_videos_json)
+    except JSONDecodeError as err:
+        print(err.args)
 
 
 class DkcObj:
@@ -56,24 +79,10 @@ class DkcObj:
             logging.error(err.args)
         return result
 
-    def get_materials(self, material_codes: List[str]) -> List[Material]:
+    def get_materials(self, material_codes: List[str]) -> List[MaterialRecord]:
         result = []
         for material_code in material_codes:
-            material_response = get_material_response(material_code)
-
-            json_obj = None
-            try:
-                json_obj = material_response.json()
-            except JSONDecodeError as err:
-                print(err.args)
-
-            if json_obj:
-                # print(unescape(material_response.content.decode(material_response.encoding)))
-                material_obj = json_obj.get('material')
-                material = create_material(material_obj)
+            material = get_material(material_code)
+            if isinstance(material, MaterialRecord):
                 result.append(material)
         return result
-
-
-if __name__ == '__main__':
-    pass
