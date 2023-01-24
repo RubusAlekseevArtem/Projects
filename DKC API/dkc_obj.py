@@ -4,52 +4,80 @@ from typing import List
 
 from requests import HTTPError, get
 
-from material import Material, MaterialRecord, create_material_record
+from material import MaterialRecord, create_material_record
 from private_file import HEADERS, BASE_URL, MASTER_KEY
 
 
-def get_material_response(material_code: str):
-    material_url = f'{BASE_URL}/catalog/material?code={material_code}'
-    logging.info(f'Get material from : {material_url}')
+def get_catalog_material_response(
+        material_code: str,
+        catalog_path: str = '',
+        log_info: str = f'Get catalog material'
+):
+    """
+    Запрос данных по материалу
+    :param log_info:
+    :param material_code: Код материала
+    :param catalog_path: Путь к запросам по материалу
+    :return: Response or None
+    """
+    material_url = f'{BASE_URL}/catalog/material{catalog_path}?code={material_code}'
+    logging.info(f'{log_info} (from {material_url})')
     try:
         return get(material_url, headers=HEADERS)
     except Exception as err:
         logging.error(err.args)
     return None
+
+
+def get_material_response(material_code: str):
+    return get_catalog_material_response(material_code, log_info='Get material')
 
 
 def get_certificates_response(material_code: str):
-    material_url = f'{BASE_URL}/catalog/material/certificates?code={material_code}'
-    logging.info(f'Get material certificates from : {material_url}')
-    try:
-        return get(material_url, headers=HEADERS)
-    except Exception as err:
-        logging.error(err.args)
-    return None
+    return get_catalog_material_response(material_code, '/certificates', 'Get material certificates')
 
 
 def get_videos_response(material_code: str):
-    material_url = f'{BASE_URL}/catalog/material/video?code={material_code}'
-    logging.info(f'Get material video response from : {material_url}')
-    try:
-        return get(material_url, headers=HEADERS)
-    except Exception as err:
-        logging.error(err.args)
-    return None
+    return get_catalog_material_response(material_code, '/video', 'Get material video')
+
+
+def get_stock_response(material_code: str):
+    return get_catalog_material_response(material_code, '/stock', 'Get material stock')
+
+
+def get_accessories_response(material_code: str):
+    return get_catalog_material_response(material_code, '/accessories', 'Get material accessories')
+
+
+def get_drawings_sketch_response(material_code: str):
+    return get_catalog_material_response(material_code, '/drawings/sketch', 'Get material drawings sketch')
 
 
 def get_material(material_code: str) -> MaterialRecord:
     material_response = get_material_response(material_code)
     material_certificates = get_certificates_response(material_code)
     material_videos = get_videos_response(material_code)
+    material_stock = get_stock_response(material_code)
+    material_accessories = get_accessories_response(material_code)
+    material_drawings_sketch = get_drawings_sketch_response(material_code)
     try:
         material_json = material_response.json().get('material')
         material_certificates_json = material_certificates.json()
         material_videos_json = material_videos.json().get('video').get(material_code)
-        # print(unescape(material_response.content.decode(material_response.encoding)))
-        return create_material_record(material_json, material_certificates_json, material_videos_json)
+        material_stock_json = material_stock.json()
+        material_accessories_json = material_accessories.json().get('accessories').get(material_code)
+        material_drawings_sketch_json = material_drawings_sketch.json().get('drawings_sketch').get(material_code)
+        return create_material_record(
+            material_json,
+            material_certificates_json,
+            material_videos_json,
+            material_stock_json,
+            material_accessories_json,
+            material_drawings_sketch_json
+        )
     except JSONDecodeError as err:
         print(err.args)
+    return MaterialRecord()
 
 
 class DkcObj:
