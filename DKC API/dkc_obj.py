@@ -60,6 +60,14 @@ def get_stock_response(material_code: str):
     )
 
 
+def get_related_response(material_code: str):
+    return get_catalog_material_response(
+        material_code,
+        '/related',
+        'Get material related'
+    )
+
+
 def get_accessories_response(material_code: str):
     return get_catalog_material_response(
         material_code,
@@ -101,30 +109,31 @@ def get_specification_response(material_code: str):
 
 
 def get_material(material_code: str) -> MaterialRecord:
-    material_response = get_material_response(material_code)
-    material_certificates = get_certificates_response(material_code)
-    material_videos = get_videos_response(material_code)
-    material_stock = get_stock_response(material_code)
-    material_accessories = get_accessories_response(material_code)
-    material_drawings_sketch = get_drawings_sketch_response(material_code)
-    material_description = get_description_response(material_code)
-    material_analogs = get_analogs_response(material_code)
-    material_specification = get_specification_response(material_code)
     try:
-        material_json = material_response.json().get('material')
-        material_certificates_json = material_certificates.json()
-        material_videos_json = material_videos.json().get('video').get(material_code)
-        material_stock_json = material_stock.json()
-        material_accessories_json = material_accessories.json().get('accessories').get(material_code)
-        material_drawings_sketch_json = material_drawings_sketch.json().get('drawings_sketch').get(material_code)
-        material_description_json = material_description.json().get('description').get(material_code)
-        material_analogs_json = material_analogs.json().get('analogs').get(material_code)
-        material_specification_json = material_specification.json().get('specification').get(material_code)
+        material_json = get_material_response(material_code).json() \
+            .get('material')
+        material_certificates_json = get_certificates_response(material_code).json()
+        material_videos_json = get_videos_response(material_code).json() \
+            .get('video').get(material_code)
+        material_stock_json = get_stock_response(material_code).json()
+        material_related_json = get_related_response(material_code).json() \
+            .get('related').get(material_code)
+        material_accessories_json = get_accessories_response(material_code).json() \
+            .get('accessories').get(material_code)
+        material_drawings_sketch_json = get_drawings_sketch_response(material_code).json() \
+            .get('drawings_sketch').get(material_code)
+        material_description_json = get_description_response(material_code).json() \
+            .get('description').get(material_code)
+        material_analogs_json = get_analogs_response(material_code).json() \
+            .get('analogs').get(material_code)
+        material_specification_json = get_specification_response(material_code).json() \
+            .get('specification').get(material_code)
         return create_material_record(
             material_json,
             material_certificates_json,
             material_videos_json,
             material_stock_json,
+            material_related_json,
             material_accessories_json,
             material_drawings_sketch_json,
             material_description_json,
