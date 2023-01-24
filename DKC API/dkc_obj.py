@@ -84,6 +84,14 @@ def get_description_response(material_code: str):
     )
 
 
+def get_analogs_response(material_code: str):
+    return get_catalog_material_response(
+        material_code,
+        '/analogs',
+        'Get material analogs'
+    )
+
+
 def get_material(material_code: str) -> MaterialRecord:
     material_response = get_material_response(material_code)
     material_certificates = get_certificates_response(material_code)
@@ -92,6 +100,7 @@ def get_material(material_code: str) -> MaterialRecord:
     material_accessories = get_accessories_response(material_code)
     material_drawings_sketch = get_drawings_sketch_response(material_code)
     material_description = get_description_response(material_code)
+    material_analogs = get_analogs_response(material_code)
     try:
         material_json = material_response.json().get('material')
         material_certificates_json = material_certificates.json()
@@ -100,6 +109,7 @@ def get_material(material_code: str) -> MaterialRecord:
         material_accessories_json = material_accessories.json().get('accessories').get(material_code)
         material_drawings_sketch_json = material_drawings_sketch.json().get('drawings_sketch').get(material_code)
         material_description_json = material_description.json().get('description').get(material_code)
+        material_analogs_json = material_analogs.json().get('analogs').get(material_code)
         return create_material_record(
             material_json,
             material_certificates_json,
@@ -107,7 +117,8 @@ def get_material(material_code: str) -> MaterialRecord:
             material_stock_json,
             material_accessories_json,
             material_drawings_sketch_json,
-            material_description_json
+            material_description_json,
+            material_analogs_json,
         )
     except JSONDecodeError as err:
         print(err.args)

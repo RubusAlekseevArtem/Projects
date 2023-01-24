@@ -16,6 +16,7 @@ class MaterialRecord:
     accessories: List[str] | None = None
     drawings_sketch: List[str] | None = None
     description: List[str] | None = None
+    analogs: List[str] | None = None
 
 
 def create_material_record(
@@ -26,6 +27,7 @@ def create_material_record(
         material_accessories: List[str],
         material_drawings_sketch: List[str],
         material_description: List[str],
+        material_analogs: List[str],
 ) -> MaterialRecord:
     # material_data.pop('sale') # test unpacking
     record = MaterialRecord()
@@ -36,4 +38,5 @@ def create_material_record(
     record.accessories = material_accessories
     record.drawings_sketch = material_drawings_sketch
     record.description = material_description
+    record.analogs = material_analogs
     return record

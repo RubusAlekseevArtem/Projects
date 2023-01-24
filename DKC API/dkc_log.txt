@@ -308,3 +308,27 @@ DEBUG:urllib3.connectionpool:https://api.dkc.ru:443 "GET /v1/catalog/material/dr
 INFO:root:Get material description (from https://api.dkc.ru/v1/catalog/material/description?code=4400003)
 DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.dkc.ru:443
 DEBUG:urllib3.connectionpool:https://api.dkc.ru:443 "GET /v1/catalog/material/description?code=4400003 HTTP/1.1" 200 None
+INFO:root:Get material (from https://api.dkc.ru/v1/catalog/material?code=4400003)
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.dkc.ru:443
+DEBUG:urllib3.connectionpool:https://api.dkc.ru:443 "GET /v1/catalog/material?code=4400003 HTTP/1.1" 200 None
+INFO:root:Get material certificates (from https://api.dkc.ru/v1/catalog/material/certificates?code=4400003)
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.dkc.ru:443
+DEBUG:urllib3.connectionpool:https://api.dkc.ru:443 "GET /v1/catalog/material/certificates?code=4400003 HTTP/1.1" 200 None
+INFO:root:Get material video (from https://api.dkc.ru/v1/catalog/material/video?code=4400003)
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.dkc.ru:443
+DEBUG:urllib3.connectionpool:https://api.dkc.ru:443 "GET /v1/catalog/material/video?code=4400003 HTTP/1.1" 200 None
+INFO:root:Get material stock (from https://api.dkc.ru/v1/catalog/material/stock?code=4400003)
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.dkc.ru:443
+DEBUG:urllib3.connectionpool:https://api.dkc.ru:443 "GET /v1/catalog/material/stock?code=4400003 HTTP/1.1" 200 None
+INFO:root:Get material accessories (from https://api.dkc.ru/v1/catalog/material/accessories?code=4400003)
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.dkc.ru:443
+DEBUG:urllib3.connectionpool:https://api.dkc.ru:443 "GET /v1/catalog/material/accessories?code=4400003 HTTP/1.1" 200 None
+INFO:root:Get material drawings sketch (from https://api.dkc.ru/v1/catalog/material/drawings/sketch?code=4400003)
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.dkc.ru:443
+DEBUG:urllib3.connectionpool:https://api.dkc.ru:443 "GET /v1/catalog/material/drawings/sketch?code=4400003 HTTP/1.1" 200 None
+INFO:root:Get material description (from https://api.dkc.ru/v1/catalog/material/description?code=4400003)
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.dkc.ru:443
+DEBUG:urllib3.connectionpool:https://api.dkc.ru:443 "GET /v1/catalog/material/description?code=4400003 HTTP/1.1" 200 None
+INFO:root:Get material analogs (from https://api.dkc.ru/v1/catalog/material/analogs?code=4400003)
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.dkc.ru:443
+DEBUG:urllib3.connectionpool:https://api.dkc.ru:443 "GET /v1/catalog/material/analogs?code=4400003 HTTP/1.1" 200 None
