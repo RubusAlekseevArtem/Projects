@@ -1,5 +1,4 @@
 from django.db import models
-from django import forms
 
 MAX_LENGTH = 200
 
@@ -27,7 +26,8 @@ class SupplierParameter(models.Model):
         return f'{self.supplier} {self.parameter_name} ({str(self.is_outdated)[0]})'
 
 
-class UserForm(forms.Form):
-    INTEGER_CHOICES = [tuple([x, x]) for x in range(1, 32)]
-    todays_date = forms.CharField(max_length=MAX_LENGTH, label="What is today's date?",
-                                  widget=forms.Select(choices=INTEGER_CHOICES))
+def get_suppliers(is_outdated: bool = False):
+    """
+    Return all Suppliers with is_outdated filter
+    """
+    return Supplier.objects.filter(is_outdated=is_outdated)

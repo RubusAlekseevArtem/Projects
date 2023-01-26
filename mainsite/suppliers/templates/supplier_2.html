@@ -1,0 +1,10 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'suppliers/style.css' %}">
+
+<form method="POST">
+    <select name="item_id">
+        {% for supplier in suppliers %}
+        <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+        {% endfor %}
+    </select>
+</form>
