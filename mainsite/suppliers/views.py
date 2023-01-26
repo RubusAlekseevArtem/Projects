@@ -4,7 +4,7 @@ from .models import Supplier, SupplierParameter
 
 
 class SuppliersView(generic.ListView):
-    template_name = 'polls/supplier.html'
+    template_name = 'suppliers/supplier.html'
     context_object_name = 'suppliers_list'
 
     def get_queryset(self):
