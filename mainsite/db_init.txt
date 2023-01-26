@@ -1,0 +1,7 @@
+python manage.py shell
+from suppliers.models import Supplier, SupplierParameter
+Supplier.objects.all()
+Supplier.objects.create(name='E-CHINT API')
+Supplier.objects.create(name='DKC API')
+Supplier.objects.create(name='DELETED API', is_outdated=True)
+Supplier.objects.all()
