@@ -1,0 +1,12 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'polls/style.css' %}">
+
+{% if suppliers_list %}
+<ul>
+    {% for supplier in suppliers_list %}
+    <li>{{ supplier.name }}</li>
+    {% endfor %}
+</ul>
+{% else %}from polls.models import Choice, Question
+<h2>Поставщики недоступны.</h2>
+{% endif %}
