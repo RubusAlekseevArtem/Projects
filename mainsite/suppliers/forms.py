@@ -12,6 +12,5 @@ class ContactForm(forms.Form):
 class DaysForm(forms.Form):
     INTEGER_CHOICES = [tuple([x, x]) for x in range(1, 32)]
     todays_date = forms.CharField(max_length=MAX_LENGTH,
-                                  widget=forms.Select(choices=INTEGER_CHOICES),
-                                  initial="-- Выберите поставщика --")
+                                  widget=forms.Select(choices=INTEGER_CHOICES))
     # selected_date =
