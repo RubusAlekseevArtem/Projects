@@ -23,7 +23,7 @@ class SupplierParameter(models.Model):
     is_outdated = models.BooleanField(default=False)  # устаревший
 
     def __str__(self):
-        return f'{self.supplier} {self.parameter_name} ({str(self.is_outdated)[0]})'
+        return f'{self.supplier.name} \'{self.parameter_name}\' ({str(self.is_outdated)[0]})'
 
 
 def get_suppliers(is_outdated: bool = False):

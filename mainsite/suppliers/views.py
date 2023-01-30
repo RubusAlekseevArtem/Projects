@@ -9,8 +9,12 @@ from .models import get_suppliers
 # ChoiceField MultipleChoiceField TypedMultipleChoiceField
 
 def index(request):
-    return render(request, 'suppliers/index.html',
-                  {'Title': 'Страница API'})
+    suppliers = get_suppliers()
+    context = {
+        'title': 'Страница API',
+        'suppliers': suppliers
+    }
+    return render(request, 'suppliers/index.html', context)
 
 
 def suppliersView(request):
