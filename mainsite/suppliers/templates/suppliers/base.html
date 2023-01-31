@@ -7,24 +7,34 @@
         {{ title }}
         {% endblock %}
     </title>
-    {% block css %}
 
+    {% block css %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'suppliers/style.css' %}">
+    {% endblock %}
+
+    {% block icon %}
+    <link rel="icon" href="{% static 'images/icon.png' %}">
     {% endblock %}
 
     {% block js %}
+    <script></script>
     {% endblock %}
 </head>
 <body>
 
-{% block mainmenu %}
-<ul>
-    {% for supplier in suppliers%}
-    <li>{{supplier}}</li>
-    {% endfor %}
-</ul>
-{% endblock mainmenu %}
-
 {% block content %}
+<div class="header">
+    <div class="container">
+
+        <div class="menu_navigation">
+            <a href="#"><img src="img/home.svg" alt="suppliers image"></a>
+            <a href="#"><img src="img/about.svg" alt="about image"></a>
+        </div>
+        <h1 class="h1">{{title}}</h1>
+
+    </div>
+</div>
 {% endblock content %}
 
 </body>

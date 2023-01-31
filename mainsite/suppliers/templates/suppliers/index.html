@@ -4,17 +4,34 @@
 <link rel="stylesheet" href="{% static 'suppliers/style.css' %}">
 
 {% block content %}
-<h1>{{title}}</h1>
-<select name="suppliers">
-    <option disabled="disabled" selected>-- Выберите поставщика --</option>
-    {% for supplier in suppliers %}
-    <option value="{{ supplier.id }}">{{ supplier.name }}</option>
-    {% endfor %}
-</select>
-<select name="suppliers">
-    <option disabled="disabled" selected>-- Выберите категорию --</option>
-    {% for supplier_parameter in supplier_parameters %}
-    <option value="{{ supplier_parameter.id }}">{{ supplier_parameter.name }}</option>
-    {% endfor %}
-</select>
+{{ block.super }}
+
+<div class="content_site">
+    <div class="container">
+
+        <!--        {% block mainmenu %}-->
+        <!--        <ul>-->
+        <!--            {% for supplier in suppliers%}-->
+        <!--            <li>{{supplier}}</li>-->
+        <!--            {% endfor %}-->
+        <!--        </ul>-->
+        <!--        {% endblock mainmenu %}-->
+        <div class="suppliers_data">
+            <select name="suppliers">
+                <option disabled="disabled" selected>-- Выберите поставщика --</option>
+                {% for supplier in suppliers %}
+                <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="supplier_parameters">
+                <option disabled="disabled" selected>-- Выберите категорию --</option>
+                {% for supplier_parameter in supplier_parameters %}
+                <option value="{{ supplier_parameter.id }}">{{ supplier_parameter.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

@@ -5,3 +5,5 @@ Supplier.objects.create(name='E-CHINT API')
 Supplier.objects.create(name='DKC API')
 Supplier.objects.create(name='DELETED API', is_outdated=True)
 Supplier.objects.all()
+
+http://127.0.0.1:8000/suppliers/index/

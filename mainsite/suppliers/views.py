@@ -11,7 +11,7 @@ from .models import get_suppliers
 def index(request):
     suppliers = get_suppliers()
     context = {
-        'title': 'Страница API',
+        'title': 'Данные поставщиков',
         'suppliers': suppliers
     }
     return render(request, 'suppliers/index.html', context)
