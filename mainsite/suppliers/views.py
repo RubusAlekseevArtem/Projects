@@ -3,16 +3,16 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from .forms import ContactForm, DaysForm
-from .models import get_suppliers
+from .models import get_suppliers, get_supplier_parameter
 
 
 # ChoiceField MultipleChoiceField TypedMultipleChoiceField
 
 def index(request):
-    suppliers = get_suppliers()
     context = {
         'title': 'Данные поставщиков',
-        'suppliers': suppliers
+        'suppliers': get_suppliers(),
+        'supplier_parameters': get_supplier_parameter()
     }
     return render(request, 'suppliers/index.html', context)
 

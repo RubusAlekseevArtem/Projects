@@ -31,3 +31,10 @@ def get_suppliers(is_outdated: bool = False):
     Return all Suppliers with is_outdated filter
     """
     return Supplier.objects.filter(is_outdated=is_outdated)
+
+
+def get_supplier_parameter(is_outdated: bool = False):
+    """
+    Return all SupplierParameters with is_outdated filter
+    """
+    return SupplierParameter.objects.filter(is_outdated=is_outdated)

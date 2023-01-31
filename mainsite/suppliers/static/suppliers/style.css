@@ -32,3 +32,17 @@
     padding-top: 10px;
     margin-bottom: 10px;
 }
+
+.select {
+    min-height: 30px;
+    /* max-height: 30px; */
+}
+
+.submit_input {
+    display: flex;
+    justify-content: center;
+}
+
+.button_input {
+    padding: 10px;
+}
