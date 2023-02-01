@@ -27,10 +27,9 @@
 
 
                 <select class="select"
+                        id="supplier_parameters_data_id"
                         name="supplier_parameters_data"
-                        multiple
-                        multiselect-search="true"
-                        multiselect-select-all="true">
+                        >
                     {% for supplier_parameter in supplier_parameters %}
                     <option value="{{ supplier_parameter.id }}">{{ supplier_parameter.parameter_name }}</option>
                     {% endfor %}

@@ -1,3 +1,5 @@
+/* Shift+F5 — принудительное обновление (без учёта кеша) */
+
 * {
     margin: 0;
     padding: 0;
@@ -20,6 +22,12 @@
     min-height: 100px;
     background-color: #1abc9c;
     color: white;
+}
+
+.header_image {
+    width: 70px;
+    height: 70px;
+    margin: 10px;
 }
 
 .content_site {

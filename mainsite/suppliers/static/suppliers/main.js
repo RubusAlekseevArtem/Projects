@@ -1,10 +1,20 @@
+"use strict";
+
+const IS_DEBUG = true;
+
+function my_log(text) {
+  if (IS_DEBUG) {
+    console.log(text);
+  }
+}
+
 $(document).ready(() => {
   $(".btn").click(() => {
     $.ajax({
       url: "",
       type: "get",
       data: {
-        button_text: $(this).text(),
+        query_name: "test",
       },
       success: (response) => {
         // $(".btn").text(response.seconds);
@@ -13,6 +23,34 @@ $(document).ready(() => {
     });
   });
 });
+
+function suppliersOnChanged() {
+  $.ajax({
+    url: "",
+    type: "get",
+    data: {
+      query_name: "getSuppliersParameters",
+      supplier_id: "1",
+    },
+    success: (response) => {
+      my_log("suppliersOnChanged() success");
+      my_log(response);
+      const json_obj = JSON.parse(response.suppliers);
+      my_log(json_obj);
+      $("#supplier_parameters_data_id").find("option").remove();
+      json_obj.forEach((element) => {
+        const supplier = element.fields;
+        $("#supplier_parameters_data_id").append(
+          `<option value=${supplier.supplier}>${supplier.parameter_name}</option>`
+        );
+      });
+    },
+    error: (response) => {
+      my_log("suppliersOnChanged() error");
+      my_log(response);
+    },
+  });
+}
 
 function getAllTodos(url) {
   fetch(url, {
