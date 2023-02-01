@@ -23,14 +23,15 @@ def index(request):
             t = datetime.now()
             return JsonResponse({'seconds': t}, status=200)
         if data == 'getSuppliersParameters' and is_ajax(request) and request.GET.get('supplier_id'):
-            print(request.GET.get('supplier_id'))
-            supplier_parameters_query_set = SupplierParameter.objects.all().filter(pk=request.GET.get('supplier_id'))
+            supplier_id = int(request.GET.get('supplier_id'))
+            supplier_parameters_query_set = SupplierParameter.objects.all().filter(supplier__pk=supplier_id)
             suppliers = serializers.serialize('json', supplier_parameters_query_set)
             print(suppliers)
             return JsonResponse({'suppliers': suppliers}, status=200)
     context = {
         'title': 'Данные поставщиков',
         'suppliers': get_suppliers(),
-        'supplier_parameters': get_supplier_parameter()
+        'supplier_parameters': get_supplier_parameter(),
+        'is_multiple': False
     }
     return render(request, 'suppliers/index.html', context)

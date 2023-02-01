@@ -18,7 +18,11 @@
             </div>
 
             <div class="suppliers_data">
-                <select class="select" name="suppliers" onchange="suppliersOnChanged()">
+                <select class="select"
+                        name="suppliers"
+                        onchange="suppliersOnChanged()"
+                        id="suppliers_select"
+                >
                     <option disabled="disabled" selected>-- Поставщик --</option>
                     {% for supplier in suppliers %}
                     <option value="{{ supplier.id }}">{{ supplier.name }}</option>
@@ -27,9 +31,14 @@
 
 
                 <select class="select"
-                        id="supplier_parameters_data_id"
+                        id="supplier_parameters_select"
                         name="supplier_parameters_data"
-                        >
+                        {% if is_multiple %}
+                        multiple
+                        multiselect-search="true"
+                        multiselect-select-all="true"
+                        {% endif %}
+                >
                     {% for supplier_parameter in supplier_parameters %}
                     <option value="{{ supplier_parameter.id }}">{{ supplier_parameter.parameter_name }}</option>
                     {% endfor %}

@@ -1,5 +1,17 @@
 "use strict";
 
+/*
+AJAX notes
+
+For selected text
+var conceptName = $('#aioConceptName').find(":selected").text();
+For selected value
+var conceptName = $('#aioConceptName').find(":selected").val();
+
+aioConceptName - id name
+
+*/
+
 const IS_DEBUG = true;
 
 function my_log(text) {
@@ -25,22 +37,23 @@ $(document).ready(() => {
 });
 
 function suppliersOnChanged() {
+  const supplier_id = $("#suppliers_select").find(":selected").val();
   $.ajax({
     url: "",
     type: "get",
     data: {
       query_name: "getSuppliersParameters",
-      supplier_id: "1",
+      supplier_id: supplier_id, // get selected supplier_id
     },
     success: (response) => {
-      my_log("suppliersOnChanged() success");
+      my_log("suppliersOnChanged() success" + supplier_id);
       my_log(response);
       const json_obj = JSON.parse(response.suppliers);
       my_log(json_obj);
-      $("#supplier_parameters_data_id").find("option").remove();
+      $("#supplier_parameters_select").find("option").remove(); // remove all options
       json_obj.forEach((element) => {
         const supplier = element.fields;
-        $("#supplier_parameters_data_id").append(
+        $("#supplier_parameters_select").append(
           `<option value=${supplier.supplier}>${supplier.parameter_name}</option>`
         );
       });
