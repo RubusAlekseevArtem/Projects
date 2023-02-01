@@ -1,58 +1,24 @@
-from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from datetime import datetime
 
-from .forms import ContactForm, DaysForm
+from django.http import JsonResponse
+from django.shortcuts import render
+
 from .models import get_suppliers, get_supplier_parameter
 
 
-# ChoiceField MultipleChoiceField TypedMultipleChoiceField
-
 def index(request):
+    if request.method == 'GET':
+        text = request.GET.get('button_text')
+        print(f'request.GET={request.GET}')
+        print(f'button_text={text}')
+        # request.is_ajax() is deprecated since django 3.1
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        if is_ajax:
+            t = datetime.now()
+            return JsonResponse({'seconds': t}, status=200)
     context = {
         'title': 'Данные поставщиков',
         'suppliers': get_suppliers(),
         'supplier_parameters': get_supplier_parameter()
     }
     return render(request, 'suppliers/index.html', context)
-
-
-def suppliersView(request):
-    form = DaysForm()
-    suppliers = get_suppliers()
-    print(form)
-    if form.is_valid():
-        print(form.cleaned_data)
-        # subject = form.cleaned_data["subject"]
-        # from_email = form.cleaned_data["from_email"]
-        # message = form.cleaned_data['message']
-        # try:
-        #     send_mail(subject, message, from_email, ["admin@example.com"])
-        # except BadHeaderError:
-        #     return HttpResponse("Invalid header found.")
-        # return redirect("success")
-        pass  # TODO Create Logic
-    return render(request, "suppliers/supplier_2.html", {"suppliers": suppliers})
-
-
-def contactView(request):
-    if request.method == "GET":
-        form = ContactForm()
-        print(form)
-    else:
-        form = ContactForm(request.POST)
-        print(form)
-        if form.is_valid():
-            subject = form.cleaned_data["subject"]
-            from_email = form.cleaned_data["from_email"]
-            message = form.cleaned_data['message']
-            try:
-                send_mail(subject, message, from_email, ["admin@example.com"])
-            except BadHeaderError:
-                return HttpResponse("Invalid header found.")
-            return redirect("success")
-    return render(request, "suppliers/email.html", {"form": form})
-
-
-def successView(request):
-    return HttpResponse("Success! Thank you for your message.")

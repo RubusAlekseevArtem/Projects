@@ -1,9 +1,9 @@
 {% extends 'suppliers/base.html' %}
 
 {% load static %}
-
 {% block js %}
-<script type="text/javascript" src="{% static 'multiselect-dropdown.js' %}"></script>
+<script type="text/javascript" src="{% static 'suppliers/multiselect-dropdown.js' %}"></script>
+
 {% endblock %}
 
 {% block content %}
@@ -13,16 +13,24 @@
     <div class="container">
 
         <form action="">
+            <div id="data-from-script">
+                {{data1}}
+            </div>
+
             <div class="suppliers_data">
-                <select class="select" name="suppliers">
+                <select class="select" name="suppliers" onchange="suppliersOnChanged()">
                     <option disabled="disabled" selected>-- Поставщик --</option>
                     {% for supplier in suppliers %}
                     <option value="{{ supplier.id }}">{{ supplier.name }}</option>
                     {% endfor %}
                 </select>
 
-                <select class="select" name="supplier_parameters_data" multiple>
-                    <option disabled="disabled" selected>-- Категория --</option>
+
+                <select class="select"
+                        name="supplier_parameters_data"
+                        multiple
+                        multiselect-search="true"
+                        multiselect-select-all="true">
                     {% for supplier_parameter in supplier_parameters %}
                     <option value="{{ supplier_parameter.id }}">{{ supplier_parameter.parameter_name }}</option>
                     {% endfor %}
@@ -41,6 +49,15 @@
             </div>
         </form>
 
+        <div class="demo">
+            <button type="button" class="btn btn-success btn-lg" style="padding:10px;">AJAX_DEMO</button>
+            <ul id="seconds">
+            </ul>
+            <!-- для ajax чтобы не скачивать jQuery ?-->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+            <!-- запросы  -->
+            <script type="text/javascript" src="{% static 'suppliers/main.js' %}"></script>
+        </div>
 
     </div>
 </div>

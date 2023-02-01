@@ -38,6 +38,11 @@
     /* max-height: 30px; */
 }
 
+.select_parameters {
+    min-height: 30px;
+    /* max-height: 30px; */
+}
+
 .submit_input {
     display: flex;
     justify-content: center;
