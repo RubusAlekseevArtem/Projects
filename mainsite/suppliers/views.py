@@ -4,7 +4,7 @@ from django.core import serializers
 from django.http import JsonResponse
 from django.shortcuts import render
 
-from .models import get_suppliers, get_supplier_parameter, SupplierParameter
+from .models import get_suppliers, SupplierParameter
 
 
 def is_ajax(request):
@@ -25,13 +25,14 @@ def index(request):
         if data == 'getSuppliersParameters' and is_ajax(request) and request.GET.get('supplier_id'):
             supplier_id = int(request.GET.get('supplier_id'))
             supplier_parameters_query_set = SupplierParameter.objects.all().filter(supplier__pk=supplier_id)
-            suppliers = serializers.serialize('json', supplier_parameters_query_set)
+            suppliers = serializers.serialize('json', supplier_parameters_query_set)  # serialize query set to json
             print(suppliers)
             return JsonResponse({'suppliers': suppliers}, status=200)
     context = {
         'title': 'Данные поставщиков',
         'suppliers': get_suppliers(),
-        'supplier_parameters': get_supplier_parameter(),
-        'is_multiple': False
+        'supplier_parameters': [],
+        'is_multiple': True,
+        'max_items_in_dropdown_menu': 5,
     }
     return render(request, 'suppliers/index.html', context)

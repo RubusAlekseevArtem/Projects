@@ -2,8 +2,12 @@
 
 {% load static %}
 {% block js %}
+<!-- Выпадающий список  -->
 <script type="text/javascript" src="{% static 'suppliers/multiselect-dropdown.js' %}"></script>
-
+<!-- для ajax чтобы не скачивать jQuery ?-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<!-- запросы  -->
+<script type="text/javascript" src="{% static 'suppliers/main.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -13,9 +17,6 @@
     <div class="container">
 
         <form action="">
-            <div id="data-from-script">
-                {{data1}}
-            </div>
 
             <div class="suppliers_data">
                 <select class="select"
@@ -33,38 +34,36 @@
                 <select class="select"
                         id="supplier_parameters_select"
                         name="supplier_parameters_data"
+
                         {% if is_multiple %}
                         multiple
                         multiselect-search="true"
+                        multiselect-max-items="{{ max_items_in_dropdown_menu }}"
                         multiselect-select-all="true"
+                        multiselect-hide-x = "false"
                         {% endif %}
                 >
                     {% for supplier_parameter in supplier_parameters %}
                     <option value="{{ supplier_parameter.id }}">{{ supplier_parameter.parameter_name }}</option>
                     {% endfor %}
                 </select>
+            </div>
 
-                <select class="select" name="articles_data">
-                    <option disabled="disabled" selected>-- Артикулы --</option>
-                    {% for article in articles %}
-                    <option value="{{ article.id }}">{{ article.name }}</option>
-                    {% endfor %}
-                </select>
+            <div class="textarea_block">
+                <textarea class="textarea" id="list_codes" cols="30">4400003
+4400004
+4400005</textarea>
             </div>
 
             <div class="submit_input">
-                <input type="submit" value="Скачать" class="button_input">
+                <input type="submit" value="Скачать" class="button_input" onclick="downloadOnClick()">
             </div>
         </form>
 
-        <div class="demo">
+        <div class="demo" style="display:none;">
             <button type="button" class="btn btn-success btn-lg" style="padding:10px;">AJAX_DEMO</button>
             <ul id="seconds">
             </ul>
-            <!-- для ajax чтобы не скачивать jQuery ?-->
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-            <!-- запросы  -->
-            <script type="text/javascript" src="{% static 'suppliers/main.js' %}"></script>
         </div>
 
     </div>

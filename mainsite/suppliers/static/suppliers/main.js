@@ -12,6 +12,22 @@ aioConceptName - id name
 
 */
 
+function download(filename, text) {
+  var element = document.createElement("a");
+  element.setAttribute(
+    "href",
+    "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+  );
+  element.setAttribute("download", filename);
+
+  element.style.display = "none";
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+
 const IS_DEBUG = true;
 
 function my_log(text) {
@@ -36,17 +52,27 @@ $(document).ready(() => {
   });
 });
 
+function downloadOnClick() {
+  my_log("downloadOnClick");
+  const lines = $("#list_codes")
+    .val()
+    .trim()
+    .split("\n")
+    .map((s) => s.trim());
+  my_log(lines);
+}
+
 function suppliersOnChanged() {
-  const supplier_id = $("#suppliers_select").find(":selected").val();
+  const supplier_id = $("#suppliers_select").find(":selected").val(); // get selected supplier_id
   $.ajax({
     url: "",
     type: "get",
     data: {
       query_name: "getSuppliersParameters",
-      supplier_id: supplier_id, // get selected supplier_id
+      supplier_id: supplier_id,
     },
     success: (response) => {
-      my_log("suppliersOnChanged() success" + supplier_id);
+      my_log(`success suppliersOnChanged(supplier_id=${supplier_id})`);
       my_log(response);
       const json_obj = JSON.parse(response.suppliers);
       my_log(json_obj);
@@ -57,79 +83,18 @@ function suppliersOnChanged() {
           `<option value=${supplier.supplier}>${supplier.parameter_name}</option>`
         );
       });
+      /*
+      https://stackoverflow.com/questions/4069982/document-getelementbyid-vs-jquery
+      """document.getElementById == jQuery $()?""""
+      document.getElementById('contents'); //returns a HTML DOM Object
+      var contents = $('#contents');  //returns a jQuery Object
+      var contents = $('#contents')[0]; //returns a HTML DOM Object
+      */
+      my_log($("#supplier_parameters_select")[0].loadOptions()); // update dropdown menu options
     },
     error: (response) => {
-      my_log("suppliersOnChanged() error");
+      my_log("error suppliersOnChanged()");
       my_log(response);
     },
   });
-}
-
-function getAllTodos(url) {
-  fetch(url, {
-    headers: {
-      "X-Requested-With": "XMLHttpRequest",
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      const todoList = document.getElementById("todoList");
-      todoList.innerHTML = "";
-
-      data.context.forEach((todo) => {
-        const todoHTMLElement = `
-        <li>
-          <p>Task: ${todo.task}</p>
-          <p>Completed?: ${todo.completed}</p>
-        </li>`;
-        todoList.innerHTML += todoHTMLElement;
-      });
-    });
-}
-
-function addTodo(url, payload) {
-  fetch(url, {
-    method: "POST",
-    credentials: "same-origin",
-    headers: {
-      "X-Requested-With": "XMLHttpRequest",
-      "X-CSRFToken": getCookie("csrftoken"),
-    },
-    body: JSON.stringify({ payload: payload }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-    });
-}
-
-function updateTodo(url, payload) {
-  fetch(url, {
-    method: "PUT",
-    credentials: "same-origin",
-    headers: {
-      "X-Requested-With": "XMLHttpRequest",
-      "X-CSRFToken": getCookie("csrftoken"),
-    },
-    body: JSON.stringify({ payload: payload }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-    });
-}
-
-function deleteTodo(url) {
-  fetch(url, {
-    method: "DELETE",
-    credentials: "same-origin",
-    headers: {
-      "X-Requested-With": "XMLHttpRequest",
-      "X-CSRFToken": getCookie("csrftoken"),
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-    });
 }
