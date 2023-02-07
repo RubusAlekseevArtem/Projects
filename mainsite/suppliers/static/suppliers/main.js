@@ -28,14 +28,6 @@ function download(filename, text) {
   document.body.removeChild(element);
 }
 
-const IS_DEBUG = true;
-
-function my_log(text) {
-  if (IS_DEBUG) {
-    console.log(text);
-  }
-}
-
 $(document).ready(() => {
   $(".btn").click(() => {
     $.ajax({
@@ -53,29 +45,29 @@ $(document).ready(() => {
 });
 
 function downloadOnClick() {
-  my_log("downloadOnClick");
+  console.log("downloadOnClick");
   const lines = $("#list_codes")
     .val()
     .trim()
     .split("\n")
     .map((s) => s.trim());
-  my_log(lines);
+  console.log(lines);
 }
 
 function suppliersOnChanged() {
-  const supplier_id = $("#suppliers_select").find(":selected").val(); // get selected supplier_id
+  const supplier_id = $("#suppliers_select").find(":selected").val();
   $.ajax({
     url: "",
     type: "get",
     data: {
       query_name: "getSuppliersParameters",
-      supplier_id: supplier_id,
+      supplier_id: supplier_id, // get selected supplier_id
     },
     success: (response) => {
-      my_log(`success suppliersOnChanged(supplier_id=${supplier_id})`);
-      my_log(response);
-      const json_obj = JSON.parse(response.suppliers);
-      my_log(json_obj);
+      //   console.log(`success suppliersOnChanged(supplier_id=${supplier_id})`);
+      console.log(response.suppliers_parameters);
+      const json_obj = JSON.parse(response.suppliers_parameters);
+      //   console.log(json_obj);
       $("#supplier_parameters_select").find("option").remove(); // remove all options
       json_obj.forEach((element) => {
         const supplier = element.fields;
@@ -90,11 +82,11 @@ function suppliersOnChanged() {
       var contents = $('#contents');  //returns a jQuery Object
       var contents = $('#contents')[0]; //returns a HTML DOM Object
       */
-      my_log($("#supplier_parameters_select")[0].loadOptions()); // update dropdown menu options
+      $("#supplier_parameters_select")[0].loadOptions(); // update dropdown menu options
     },
     error: (response) => {
-      my_log("error suppliersOnChanged()");
-      my_log(response);
+      console.log("error suppliersOnChanged()");
+      console.log(response);
     },
   });
 }

@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import List
 
-from data_classes.certificate import Certificate
-from data_classes.material import Material
-from data_classes.stock import Stock
-from data_classes.video import Video
+from .data_classes.certificate import Certificate
+from .data_classes.material import Material
+from .data_classes.stock import Stock
+from .data_classes.video import Video
 
 
 @dataclass

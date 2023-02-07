@@ -6,6 +6,16 @@ from django.shortcuts import render
 
 from .models import get_suppliers, SupplierParameter
 
+import sys
+import os.path
+
+from .classes.parameter_provider import SupplierProvider
+
+# print(sys.path)
+sys.path.append(os.path.abspath(rf'..'))
+
+QUERY_NAME = 'query_name'
+
 
 def is_ajax(request):
     """
@@ -14,20 +24,38 @@ def is_ajax(request):
     return request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
 
-def index(request):
+def is_ajax_query(request, query_name):
+    return request.GET.get(QUERY_NAME) == query_name and is_ajax(request)
+
+
+def index_responses(request):
     if request.method == 'GET':
-        data = request.GET.get('query_name')
-        if data == 'test' and is_ajax(request):
-            print(f'request.GE`T={request.GET}')
-            print(f'button_text={data}')
+        if is_ajax_query(request, 'test'):
+            print(f'request.GET={request.GET}')
+            print(f'button_text={request.GET.get(QUERY_NAME)}')
             t = datetime.now()
             return JsonResponse({'seconds': t}, status=200)
-        if data == 'getSuppliersParameters' and is_ajax(request) and request.GET.get('supplier_id'):
+        if is_ajax_query(request, 'getSuppliersParameters') and \
+                request.GET.get('supplier_id'):  # if have supplier_id
+
             supplier_id = int(request.GET.get('supplier_id'))
+
+            supplier_provider = SupplierProvider()
+            supplier_provider.try_update_parameters_by_id(supplier_id)
+
             supplier_parameters_query_set = SupplierParameter.objects.all().filter(supplier__pk=supplier_id)
-            suppliers = serializers.serialize('json', supplier_parameters_query_set)  # serialize query set to json
-            print(suppliers)
-            return JsonResponse({'suppliers': suppliers}, status=200)
+            suppliers_parameters = serializers.serialize('json',
+                                                         supplier_parameters_query_set)  # serialize query set to json
+            data = {
+                'suppliers_parameters': suppliers_parameters,
+            }
+            return JsonResponse(data, status=200)
+
+
+def index(request):
+    response = index_responses(request)
+    if response is not None:
+        return response
     context = {
         'title': 'Данные поставщиков',
         'suppliers': get_suppliers(),

@@ -2,8 +2,8 @@ import dataclasses
 import json
 from pprint import PrettyPrinter
 
-from dkc_obj import DkcObj
-from private_file import HEADERS, INDENT
+from .dkc_obj import DkcObj
+from .private_file import HEADERS, INDENT
 
 PRINT_TO_CONSOLE = False
 

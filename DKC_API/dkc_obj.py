@@ -1,17 +1,19 @@
 import logging
 from json import JSONDecodeError
+from time import sleep
 from typing import List
 
 from requests import HTTPError, get
 
-from material import MaterialRecord, create_material_record
-from private_file import HEADERS, BASE_URL, MASTER_KEY
+from .material import MaterialRecord, create_material_record
+
+SLEEP_DELAY = 0.1  # seconds
 
 
 def get_catalog_material_response(
         material_code: str,
-        catalog_path: str = '',
-        log_info: str = f'Get catalog material'
+        catalog_path: str,
+        log_info: str,
 ):
     """
     Запрос данных по материалу
@@ -23,16 +25,21 @@ def get_catalog_material_response(
     material_url = f'{BASE_URL}/catalog/material{catalog_path}?code={material_code}'
     logging.info(f'{log_info} (from {material_url})')
     try:
+        # sleep(SLEEP_DELAY)
         return get(material_url, headers=HEADERS)
     except Exception as err:
         logging.error(err.args)
     return None
 
 
+from .private_file import HEADERS, BASE_URL, MASTER_KEY
+
+
 def get_material_response(material_code: str):
     return get_catalog_material_response(
         material_code,
-        log_info='Get material'
+        '',
+        'Get material'
     )
 
 
@@ -150,16 +157,18 @@ class DkcObj:
         self.base_encoding = 'UTF-8'
         self.AUTH_URL = f'{BASE_URL}/auth.access.token/{MASTER_KEY}'
         self.access_token = self.__get_access_token()
-        logging.basicConfig(filename="dkc_log.txt", level=logging.DEBUG)
+        logging.basicConfig(filename="dkc.log", level=logging.DEBUG)
 
     def __get_access_token(self):
+        # TODO handle error access_token status_code=406
+        # TODO ('406 Client Error:  for url: https://api.dkc.ru/v1/auth.access.token/a11b35ff2856d125b6463627bcf72bda',)
         result = None
         print(self.AUTH_URL)
         try:
             response = get(self.AUTH_URL, headers=HEADERS)
             if self.base_encoding.lower() != response.encoding.lower():
                 self.base_encoding = response.encoding
-            print(f'status_code={response.status_code}')
+            print(f'access_token status_code={response.status_code}')
             try:
                 response.raise_for_status()
                 try:

@@ -1,3 +1,4 @@
 private_file*.py
 # settings*.py
 mainsite/static/*
+*.log
