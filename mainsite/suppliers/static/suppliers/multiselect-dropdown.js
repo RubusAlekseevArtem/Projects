@@ -110,7 +110,7 @@ function MultiselectDropdown(options) {
   var config = {
     search: true,
     height: "15rem",
-    placeholder: "Данные",
+    placeholder: "Параметры",
     txtSelected: "выбрано",
     txtAll: "Все",
     txtRemove: "Remove",

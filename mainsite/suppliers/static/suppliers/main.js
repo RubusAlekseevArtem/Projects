@@ -9,7 +9,6 @@ For selected value
 var conceptName = $('#aioConceptName').find(":selected").val();
 
 aioConceptName - id name
-
 */
 
 function download(filename, text) {
@@ -46,12 +45,65 @@ $(document).ready(() => {
 
 function downloadOnClick() {
   console.log("downloadOnClick");
-  const lines = $("#list_codes")
-    .val()
-    .trim()
-    .split("\n")
-    .map((s) => s.trim());
-  console.log(lines);
+  const trim_material_codes = $("#list_codes").val().trim();
+
+  if (trim_material_codes == "") {
+    alert("Введите коды артикулов.");
+  } else {
+    const material_codes = trim_material_codes.split("\n").map((s) => s.trim());
+
+    console.log(material_codes);
+
+    const supplier_id = $("#suppliers_select").find(":selected").val();
+
+    const selected_lables_suppliers_parameters = $(
+      ".multiselect-dropdown-list"
+    ).find(".checked>label"); // не filter
+    //   console.log(selected_suppliers_parameters.get()); // get - массив результат (он вернет обычный массив элементов DOM)
+
+    const selected_suppliers_parameters = selected_lables_suppliers_parameters
+      .get()
+      .map((el) => el.textContent);
+
+    //   console.log(selected_suppliers_parameters);
+
+    const is_suppliers_selected = $("#suppliers_select").val();
+    //   console.log(is_suppliers_selected);
+
+    if (is_suppliers_selected == null) {
+      alert("Выберите поставщика.");
+    } else {
+      console.log(
+        "selected_suppliers_parameters=" + selected_suppliers_parameters
+      );
+      if (selected_suppliers_parameters.length == 0) {
+        alert("Выберите параметры.");
+      } else {
+        if (selected_suppliers_parameters.includes("Все")) {
+          console.log("+");
+        } else {
+          console.log("-");
+          $.ajax({
+            url: "",
+            type: "get",
+            data: {
+              query_name: "getMaterialsFile",
+              supplier_id: supplier_id,
+              material_codes: material_codes,
+              suppliers_parameters: selected_suppliers_parameters,
+            },
+            success: (response) => {
+              //   console.log(response.suppliers_parameters);
+            },
+            error: (response) => {
+              //   console.log("error downloadOnClick()");
+              //   console.log(response);
+            },
+          });
+        }
+      }
+    }
+  }
 }
 
 function suppliersOnChanged() {

@@ -1,14 +1,17 @@
-import logging
 from typing import List
 
 from .base_supplier import BaseSupplier
 from .dkc_supplier import DKCSupplier
-from ..models import Supplier
 
 
 class SupplierProvider:
+    MINIMUM_SUPPLIER_ID = 1
 
     def __init__(self, suppliers: List[BaseSupplier] = None):
+        """
+        Инициализация доступных поставщиков
+        @param suppliers:
+        """
         if suppliers is not None:
             self.suppliers = suppliers
         else:
@@ -16,28 +19,29 @@ class SupplierProvider:
                 DKCSupplier(),
             )
 
-    def try_execute_api_by_name(self, supplier_name):
+    def try_execute_script_with_parameters(self, supplier_id: int, parameters=None):
         """
-        Попробуй выполнить запрос к поставщику через api по имени
-        @param supplier_name:
-        @return:
+        Попробуй выполнить скрипт через api поставщика
+        @param parameters: словарь параметров
+        @param supplier_id: id поставщика
+        @return: None
         """
-        raise NotImplementedError()
+        if parameters is None:
+            parameters = {}
+        if supplier_id < self.MINIMUM_SUPPLIER_ID:
+            return
+        supplier = list(filter(lambda supplier_: supplier_.pk == supplier_id, self.suppliers))
+        if supplier:
+            supplier[0].get_data_from_api_with_parameters(parameters)
 
     def try_update_parameters_by_id(self, supplier_id: int):
         """
         Попробуй выполнить запрос к поставщику через api по id
-        @param supplier_id:
-        @return:
+        @param supplier_id: id поставщика
+        @return: None
         """
-        if supplier_id < 1:
+        if supplier_id < self.MINIMUM_SUPPLIER_ID:
             return
-        for supplier in self.suppliers:
-            try:
-                supplier_obj = Supplier.objects.all().filter(name=supplier.name)[0]
-                print(f'{supplier_obj.id} == {supplier_id}')
-                if supplier_obj.id == supplier_id:  # если есть такой поставщик
-                    supplier.update_new_supplier_params()
-                    return
-            except IndexError as err:
-                logging.error(err)
+        supplier = list(filter(lambda supplier_: supplier_.pk == supplier_id, self.suppliers))
+        if supplier:
+            supplier[0].update_new_supplier_params()
