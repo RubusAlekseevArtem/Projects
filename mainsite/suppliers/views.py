@@ -1,3 +1,4 @@
+import io
 import json
 import pprint
 from datetime import datetime
@@ -62,10 +63,8 @@ def index_responses(request):
             print(f'{supplier_id=}')
 
             material_codes = request.GET.getlist('material_codes[]')
-            material_codes.sort()
             print(material_codes)
             suppliers_parameters = request.GET.getlist('suppliers_parameters[]')
-            suppliers_parameters.sort()
             print(suppliers_parameters)
 
             params = {
@@ -77,11 +76,17 @@ def index_responses(request):
             data = supplier_provider.try_get_data_from_script_with_parameters(supplier_id, params)
 
             if data:
-                pprint.pprint(data, indent=4)
+                # pprint.pprint(data, indent=2)
                 json_data = json.dumps(data, indent=4)
-                with open('data.txt', 'w') as file:
-                    file.writelines(json_data)
-                    return FileResponse(file)
+                print(json_data)
+                json_bytes_data = json_data.encode('utf-8')  # to bytes
+                buf = io.BytesIO()
+                buf.write(json_bytes_data)
+                # if you pass a file-like object like io.BytesIO, it’s your task to seek()
+                # it before passing it to FileResponse.
+                buf.seek(0)
+                return FileResponse(buf, status=200, as_attachment=True)
+            return JsonResponse({}, status=500)
 
 
 def index(request):
@@ -94,5 +99,6 @@ def index(request):
         'supplier_parameters': [],
         'is_multiple': True,
         'max_items_in_dropdown_menu': 3,
+        'select_all': False,
     }
     return render(request, 'suppliers/index.html', context)

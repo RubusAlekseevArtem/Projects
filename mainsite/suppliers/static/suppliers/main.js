@@ -50,7 +50,10 @@ function downloadOnClick() {
   if (trim_material_codes == "") {
     alert("Введите коды артикулов.");
   } else {
-    const material_codes = trim_material_codes.split("\n").map((s) => s.trim());
+    const material_codes = trim_material_codes
+      .split("\n")
+      .map((s) => s.trim())
+      .sort();
 
     console.log(material_codes);
 
@@ -63,7 +66,8 @@ function downloadOnClick() {
 
     const selected_suppliers_parameters = selected_lables_suppliers_parameters
       .get()
-      .map((el) => el.textContent);
+      .map((el) => el.textContent)
+      .sort();
 
     //   console.log(selected_suppliers_parameters);
 
@@ -91,11 +95,14 @@ function downloadOnClick() {
               suppliers_parameters: selected_suppliers_parameters,
             },
             success: (response) => {
-              console.log(response);
+              //   console.log(new TextDecoder().decode(response));
+              console.log(response); // response - binary text
+              //   response = String.fromCharCode(response);
+              //   download("file.txt", response);
             },
             error: (response) => {
-              //   console.log("error downloadOnClick()");
-              //   console.log(response);
+              console.log(response);
+              alert("Ошибка сервера.");
             },
           });
         }

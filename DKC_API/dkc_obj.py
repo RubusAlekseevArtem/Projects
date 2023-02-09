@@ -1,8 +1,8 @@
 import logging
 from json import JSONDecodeError
-from typing import List, Callable
+from typing import List
 
-from requests import HTTPError, get, Response
+from requests import HTTPError, get
 
 from .data_classes.certificate import Certificate
 from .data_classes.material import Material
@@ -316,9 +316,9 @@ class DkcObj:
     def get_materials(self, material_codes: List[str], params: dict = None):
         result = []
         for material_code in material_codes:
-            print(f'Запрос по товару - \'{material_code}\'')
             material = get_material(material_code, params)
             if material:
+                print(f'Запрос по товару - \'{material_code}\' получен.')
                 result.append(material)
             else:
                 logging.info(f'Material with material_code=\'{material_code}\' does not exist')

@@ -25,7 +25,7 @@ class DKCSupplier(BaseSupplier):
     def __str__(self):
         return f'DKCSupplier({super().__str__()})'
 
-    def get_data_from_api_with_parameters(self, params: dict) -> object:
+    def get_data_from_api_with_parameters(self, params: dict):
         """
         Получение данных от DKC API
         @param parameters:
@@ -37,13 +37,10 @@ class DKCSupplier(BaseSupplier):
         # print(f'{material_codes=} {suppliers_parameters=}')
         if material_codes and suppliers_parameters:
             materials = get_materials(material_codes, params)
-            print('DKCSupplier materials:')
-            pprint.pprint(materials, indent=2)
-            # for material in materials:
-            #     # print(f'Material Created:')
-            #     print('')
-            #     print(f'{material=}')
-        return None  # TODO
+            # print('DKCSupplier materials:')
+            # pprint.pprint(materials, indent=2)
+            return materials
+        return None
 
     def get_supplier_parameters_from_api(self) -> tuple:
         material_codes = ['4400003']
