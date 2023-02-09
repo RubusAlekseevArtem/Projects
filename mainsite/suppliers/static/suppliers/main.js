@@ -96,9 +96,9 @@ function downloadOnClick() {
             },
             success: (response) => {
               //   console.log(new TextDecoder().decode(response));
-              console.log(response); // response - binary text
+              //   console.log(response); // response - binary text
               //   response = String.fromCharCode(response);
-              //   download("file.txt", response);
+              download("data.txt", response);
             },
             error: (response) => {
               console.log(response);

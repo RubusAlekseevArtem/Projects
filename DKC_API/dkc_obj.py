@@ -335,4 +335,5 @@ class DkcObj:
             else:
                 logging.info(f'Material with material_code=\'{material_code}\' does not exist')
                 print(f'Материал с кодом {material_code} не найден.')
+        logging.info(f'-' * 100)
         return result

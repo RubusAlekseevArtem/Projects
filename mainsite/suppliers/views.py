@@ -33,17 +33,17 @@ def is_ajax_query(request, query_name):
 
 def index_responses(request):
     if request.method == 'GET':
-        print(f'{request.GET=}')
+        # print(f'{request.GET=}')
         if is_ajax_query(request, 'test'):
-            print(f'request.GET={request.GET}')
-            print(f'button_text={request.GET.get(QUERY_NAME)}')
+            # print(f'request.GET={request.GET}')
+            # print(f'button_text={request.GET.get(QUERY_NAME)}')
             t = datetime.now()
             return JsonResponse({'seconds': t}, status=200)
         if is_ajax_query(request, 'getSuppliersParameters') and \
                 request.GET.get('supplier_id'):  # if have supplier_id
 
             supplier_id = int(request.GET.get('supplier_id'))
-            print(f'{supplier_id=}')
+            # print(f'{supplier_id=}')
 
             # долго! можно создать галочку ил кнопку с обновлением
             # supplier_provider = SupplierProvider()
@@ -60,12 +60,12 @@ def index_responses(request):
                 request.GET.get('supplier_id'):  # if have supplier_id
 
             supplier_id = int(request.GET.get('supplier_id'))
-            print(f'{supplier_id=}')
+            # print(f'{supplier_id=}')
 
             material_codes = request.GET.getlist('material_codes[]')
-            print(material_codes)
+            # print(material_codes)
             suppliers_parameters = request.GET.getlist('suppliers_parameters[]')
-            print(suppliers_parameters)
+            # print(suppliers_parameters)
 
             params = {
                 'suppliers_parameters': suppliers_parameters,
@@ -77,7 +77,7 @@ def index_responses(request):
 
             if data:
                 # pprint.pprint(data, indent=2)
-                json_data = json.dumps(data, indent=4)
+                json_data = json.dumps(data, indent=4, ensure_ascii=False)
                 # print(json_data)
                 json_bytes_data = json_data.encode('utf-8')  # to bytes
                 buf = io.BytesIO()
