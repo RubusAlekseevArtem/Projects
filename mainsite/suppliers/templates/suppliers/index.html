@@ -2,12 +2,18 @@
 
 {% load static %}
 {% block js %}
-<!-- Выпадающий список  -->
+<!-- Выпадающий список с поиском и выбором  -->
 <script type="text/javascript" src="{% static 'suppliers/multiselect-dropdown.js' %}"></script>
 <!-- для ajax чтобы не скачивать jQuery ?-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <!-- запросы  -->
 <script type="text/javascript" src="{% static 'suppliers/main.js' %}"></script>
+
+<!-- для иерархического списка  -->
+<link rel="stylesheet" href="{% static 'suppliers/tree_picker/simple_tree_picker.css' %}"/>
+<script src="{% static 'suppliers/tree_picker/simple_tree_picker.js' %}"></script>
+
+
 {% endblock %}
 
 {% block content %}
@@ -19,7 +25,7 @@
         <form action="">
 
             <div class="suppliers_data">
-                <select class="select"
+                <select class="select select_margin"
                         name="suppliers"
                         onchange="suppliersOnChanged()"
                         id="suppliers_select"
@@ -47,6 +53,8 @@
                     <option value="{{ supplier_parameter.id }}">{{ supplier_parameter.parameter_name }}</option>
                     {% endfor %}
                 </select>
+
+                <div class="tree"></div>
             </div>
 
             <div class="textarea_block">

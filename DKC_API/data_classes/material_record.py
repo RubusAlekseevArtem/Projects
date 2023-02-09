@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import List
 
-from .data_classes.certificate import Certificate
-from .data_classes.material import Material
-from .data_classes.stock import Stock
-from .data_classes.video import Video
+from DKC_API.data_classes.certificate import Certificate
+from DKC_API.data_classes.material import Material
+from DKC_API.data_classes.stock import Stock
+from DKC_API.data_classes.video import Video
 
 
 @dataclass

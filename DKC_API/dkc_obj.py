@@ -8,7 +8,7 @@ from .data_classes.certificate import Certificate
 from .data_classes.material import Material
 from .data_classes.stock import Stock
 from .data_classes.video import Video
-from .material import MaterialRecord
+from DKC_API.data_classes.material_record import MaterialRecord
 
 SLEEP_DELAY = 0.1  # seconds
 
