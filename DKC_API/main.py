@@ -24,16 +24,16 @@ def save_to_file(dkc, materials, filename):
         f.writelines(json_data)
 
 
-def get_materials(material_codes, dkc=None):
+def get_materials(material_codes, params: dict = None, dkc=None):
     if dkc is None:
         dkc = DkcObj()
         if dkc.access_token:
             HEADERS['AccessToken'] = dkc.access_token
-            return dkc.get_materials(material_codes)
+            return dkc.get_materials(material_codes, params)
         else:
             print('Ошибка получения токена для доступа')
     else:
-        return dkc.get_materials(material_codes)
+        return dkc.get_materials(material_codes, params)
 
 
 def main():

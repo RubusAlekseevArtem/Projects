@@ -13,26 +13,25 @@ class SupplierProvider:
         @param suppliers:
         """
         if suppliers is not None:
-            self.suppliers = suppliers
+            self._suppliers = suppliers
         else:
-            self.suppliers = (
+            self._suppliers = (
                 DKCSupplier(),
             )
 
-    def try_execute_script_with_parameters(self, supplier_id: int, parameters=None):
+    def try_get_data_from_script_with_parameters(self, supplier_id: int, params: dict):
         """
         Попробуй выполнить скрипт через api поставщика
-        @param parameters: словарь параметров
         @param supplier_id: id поставщика
-        @return: None
+        @param params:
+        @return: Данные или None
         """
-        if parameters is None:
-            parameters = {}
         if supplier_id < self.MINIMUM_SUPPLIER_ID:
             return
-        supplier = list(filter(lambda supplier_: supplier_.pk == supplier_id, self.suppliers))
+        supplier = list(filter(lambda supplier_: supplier_.pk == supplier_id, self._suppliers))
         if supplier:
-            supplier[0].get_data_from_api_with_parameters(parameters)
+            return supplier[0].get_data_from_api_with_parameters(params)
+        return None
 
     def try_update_parameters_by_id(self, supplier_id: int):
         """
@@ -42,6 +41,6 @@ class SupplierProvider:
         """
         if supplier_id < self.MINIMUM_SUPPLIER_ID:
             return
-        supplier = list(filter(lambda supplier_: supplier_.pk == supplier_id, self.suppliers))
+        supplier = list(filter(lambda supplier_: supplier_.pk == supplier_id, self._suppliers))
         if supplier:
             supplier[0].update_new_supplier_params()

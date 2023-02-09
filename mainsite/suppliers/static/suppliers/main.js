@@ -73,9 +73,7 @@ function downloadOnClick() {
     if (is_suppliers_selected == null) {
       alert("Выберите поставщика.");
     } else {
-      console.log(
-        "selected_suppliers_parameters=" + selected_suppliers_parameters
-      );
+      console.log("params=" + selected_suppliers_parameters);
       if (selected_suppliers_parameters.length == 0) {
         alert("Выберите параметры.");
       } else {
@@ -93,7 +91,7 @@ function downloadOnClick() {
               suppliers_parameters: selected_suppliers_parameters,
             },
             success: (response) => {
-              //   console.log(response.suppliers_parameters);
+              console.log(response);
             },
             error: (response) => {
               //   console.log("error downloadOnClick()");

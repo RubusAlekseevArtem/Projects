@@ -1,3 +1,5 @@
+import json
+import pprint
 from datetime import datetime
 
 from django.core import serializers
@@ -42,9 +44,9 @@ def index_responses(request):
             supplier_id = int(request.GET.get('supplier_id'))
             print(f'{supplier_id=}')
 
-            supplier_provider = SupplierProvider()
             # долго! можно создать галочку ил кнопку с обновлением
-            supplier_provider.try_update_parameters_by_id(supplier_id)
+            # supplier_provider = SupplierProvider()
+            # supplier_provider.try_update_parameters_by_id(supplier_id)
 
             supplier_parameters_query_set = SupplierParameter.objects.all().filter(supplier__pk=supplier_id)
             suppliers_parameters = serializers.serialize('json',
@@ -60,19 +62,26 @@ def index_responses(request):
             print(f'{supplier_id=}')
 
             material_codes = request.GET.getlist('material_codes[]')
+            material_codes.sort()
             print(material_codes)
             suppliers_parameters = request.GET.getlist('suppliers_parameters[]')
+            suppliers_parameters.sort()
             print(suppliers_parameters)
 
-            # TODO ВЫПОЛНИТЬ ЗАПРОС ДЛЯ СКРИПТА через SupplierProvider
-            # supplier_provider = SupplierProvider()
-            # supplier_provider.
+            params = {
+                'suppliers_parameters': suppliers_parameters,
+                'material_codes': material_codes
+            }
 
-            # if request.GET.get('material_codes'):
-            #     material_codes = request.GET.get('material_codes')
+            supplier_provider = SupplierProvider()
+            data = supplier_provider.try_get_data_from_script_with_parameters(supplier_id, params)
 
-            # with open('myfile.png', 'rb') as file:
-            #     return FileResponse(file)
+            if data:
+                pprint.pprint(data, indent=4)
+                json_data = json.dumps(data, indent=4)
+                with open('data.txt', 'w') as file:
+                    file.writelines(json_data)
+                    return FileResponse(file)
 
 
 def index(request):

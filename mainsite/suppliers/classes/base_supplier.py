@@ -19,6 +19,12 @@ class BaseSupplier(ABC):
         self.pk = pk
         self.name = name
 
+    def __str__(self):
+        return f'{self.pk}, {self.name}'
+
+    def __repr__(self):
+        return str(self)
+
     @abstractmethod
     def get_supplier_parameters_from_api(self) -> tuple:
         """
@@ -53,9 +59,3 @@ class BaseSupplier(ABC):
                     SupplierParameter.objects.create(supplier=supplier, parameter_name=new_parameter_name)
         except IndexError as err:
             logging.error(err)
-
-    def __str__(self):
-        return f'{self.pk}, {self.name}'
-
-    def __repr__(self):
-        return str(self)
