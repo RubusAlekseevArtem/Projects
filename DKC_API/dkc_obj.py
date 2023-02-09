@@ -284,19 +284,31 @@ def get_material(material_code: str, params: dict = None):
     return result_object
 
 
+class DkcAccessTokenError(Exception):
+    """Error getting access token to DKC API"""
+
+    def __init__(self):
+        super().__init__(self.__doc__)
+
+
 class DkcObj:
     def __init__(self):
         self.base_encoding = 'UTF-8'
         self.AUTH_URL = f'{BASE_URL}/auth.access.token/{MASTER_KEY}'
         self.access_token = self.__get_access_token()
-        logging.basicConfig(filename="dkc.log", level=logging.DEBUG)
+        if self.access_token:  # if to get access_token
+            HEADERS['AccessToken'] = self.access_token
+        else:
+            logging.error(DkcAccessTokenError.__doc__)
+            raise DkcAccessTokenError()  # raise error
+        logging.basicConfig(filename="dkc.log", level=logging.INFO)
 
     def __get_access_token(self):
-        # TODO handle error access_token status_code=406
-        # TODO ('406 Client Error:  for url: https://api.dkc.ru/v1/auth.access.token/a11b35ff2856d125b6463627bcf72bda',)
         result = None
         print(self.AUTH_URL)
         try:
+            if 'AccessToken' in HEADERS:  # delete if token exists
+                del HEADERS['AccessToken']
             response = get(self.AUTH_URL, headers=HEADERS)
             if self.base_encoding.lower() != response.encoding.lower():
                 self.base_encoding = response.encoding
@@ -304,7 +316,7 @@ class DkcObj:
             try:
                 response.raise_for_status()
                 try:
-                    result = response.json()['access_token']
+                    result = str(response.json().get('access_token'))
                 except JSONDecodeError as err:
                     logging.error(err)
             except HTTPError as err:

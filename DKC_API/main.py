@@ -2,7 +2,7 @@ import dataclasses
 import json
 from pprint import PrettyPrinter
 
-from .dkc_obj import DkcObj
+from .dkc_obj import DkcObj, DkcAccessTokenError
 from .private_file import HEADERS, INDENT
 
 PRINT_TO_CONSOLE = False
@@ -26,12 +26,11 @@ def save_to_file(dkc, materials, filename):
 
 def get_materials(material_codes, params: dict = None, dkc=None):
     if dkc is None:
-        dkc = DkcObj()
-        if dkc.access_token:
-            HEADERS['AccessToken'] = dkc.access_token
+        try:
+            dkc = DkcObj()
             return dkc.get_materials(material_codes, params)
-        else:
-            print('Ошибка получения токена для доступа')
+        except DkcAccessTokenError as err:
+            print(err)
     else:
         return dkc.get_materials(material_codes, params)
 

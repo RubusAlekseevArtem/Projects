@@ -78,7 +78,7 @@ def index_responses(request):
             if data:
                 # pprint.pprint(data, indent=2)
                 json_data = json.dumps(data, indent=4)
-                print(json_data)
+                # print(json_data)
                 json_bytes_data = json_data.encode('utf-8')  # to bytes
                 buf = io.BytesIO()
                 buf.write(json_bytes_data)

@@ -1,16 +1,12 @@
-import logging
-import pprint
+import os.path
+import sys
 
 from .base_supplier import BaseSupplier
-
-import sys
-import os.path
-
 from ..models import Supplier
 
 sys.path.append(os.path.abspath(rf'..'))
 
-from DKC_API.main import get_materials
+from DKC_API.main import get_materials, DkcObj, DkcAccessTokenError
 
 
 class DKCSupplier(BaseSupplier):
@@ -36,7 +32,12 @@ class DKCSupplier(BaseSupplier):
         # print(f'{params=}')
         # print(f'{material_codes=} {suppliers_parameters=}')
         if material_codes and suppliers_parameters:
-            materials = get_materials(material_codes, params)
+            dkc = None  # create dkc obj for all materials responses
+            try:
+                dkc = DkcObj()
+            except DkcAccessTokenError as err:
+                print(err)
+            materials = get_materials(material_codes, params, dkc)
             # print('DKCSupplier materials:')
             # pprint.pprint(materials, indent=2)
             return materials
