@@ -300,7 +300,7 @@ class DkcObj:
             HEADERS['AccessToken'] = self.access_token
         else:
             logging.error(DkcAccessTokenError.__doc__)
-            raise DkcAccessTokenError()  # raise error
+            raise DkcAccessTokenError()
         logging.basicConfig(filename="dkc.log", level=logging.INFO)
 
     def __get_access_token(self):
