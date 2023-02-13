@@ -27,22 +27,6 @@ function download(filename, text) {
   document.body.removeChild(element);
 }
 
-$(document).ready(() => {
-  $(".btn").click(() => {
-    $.ajax({
-      url: "",
-      type: "get",
-      data: {
-        query_name: "test",
-      },
-      success: (response) => {
-        // $(".btn").text(response.seconds);
-        $("#seconds").append(`<li>${response.seconds}</li>`);
-      },
-    });
-  });
-});
-
 function downloadOnClick() {
   console.log("downloadOnClick");
   const trim_material_codes = $("#list_codes").val().trim();
@@ -58,90 +42,115 @@ function downloadOnClick() {
     console.log(material_codes);
 
     const supplier_id = $("#suppliers_select").find(":selected").val();
-
-    const selected_lables_suppliers_parameters = $(
-      ".multiselect-dropdown-list"
-    ).find(".checked>label"); // не filter
-    //   console.log(selected_suppliers_parameters.get()); // get - массив результат (он вернет обычный массив элементов DOM)
-
-    const selected_suppliers_parameters = selected_lables_suppliers_parameters
-      .get()
-      .map((el) => el.textContent)
-      .sort();
-
-    //   console.log(selected_suppliers_parameters);
-
+    const selected_tree_ids = $(".tree").simpleTreePicker("val");
     const is_suppliers_selected = $("#suppliers_select").val();
     //   console.log(is_suppliers_selected);
 
     if (is_suppliers_selected == null) {
       alert("Выберите поставщика.");
     } else {
-      console.log("params=" + selected_suppliers_parameters);
-      if (selected_suppliers_parameters.length == 0) {
+      console.log("params=" + selected_tree_ids);
+      if (selected_tree_ids.length == 0) {
         alert("Выберите параметры.");
       } else {
-        if (selected_suppliers_parameters.includes("Все")) {
-          console.log("+");
-        } else {
-          console.log("-");
-          $.ajax({
-            url: "",
-            type: "get",
-            data: {
-              query_name: "getMaterialsFile",
-              supplier_id: supplier_id,
-              material_codes: material_codes,
-              suppliers_parameters: selected_suppliers_parameters,
-            },
-            success: (response) => {
-              //   console.log(new TextDecoder().decode(response));
-              //   console.log(response); // response - binary text
-              //   response = String.fromCharCode(response);
-              download("data.txt", response);
-            },
-            error: (response) => {
-              console.log(response);
-              alert("Ошибка сервера.");
-            },
-          });
-        }
+        $.ajax({
+          url: "",
+          type: "get",
+          data: {
+            query_name: "getMaterialsFile",
+            supplier_id: supplier_id,
+            material_codes: material_codes,
+            selected_tree_ids: selected_tree_ids,
+          },
+          success: (response) => {
+            //   console.log(new TextDecoder().decode(response));
+            //   console.log(response); // response - binary text
+            //   response = String.fromCharCode(response);
+            download("data.txt", response);
+          },
+          error: (response) => {
+            console.log(response);
+            alert("Ошибка сервера.");
+          },
+        });
       }
     }
   }
 }
 
+const TREE_NAME = "supplier_parameters_tree";
+
+function clearTree() {
+  $(".tree").empty();
+}
+
+function setTreeData(data = {}) {
+  // clear checked
+  //   $(".tree").simpleTreePicker("clear");
+
+  clearTree();
+
+  //   console.log($(".tree").simpleTreePicker("clear"));
+  //   console.log($(".tree").simpleTreePicker("val"));
+  //   console.log($(".tree").simpleTreePicker("display"));
+  //   console.log($(".tree").simpleTreePicker("set"));
+
+  // set new tree
+  $(".tree").simpleTreePicker({
+    tree: data,
+    name: TREE_NAME,
+    onclick: function () {
+      //   var selected = $(".tree").simpleTreePicker("display");
+      //   console.log(selected);
+      var vals = $(".tree").simpleTreePicker("val");
+      console.log(vals);
+    },
+  });
+}
+
 function suppliersOnChanged() {
+  /* 
+    Number - id узла
+    Name - имя узла
+    Children - дети
+  */
+  //   const demoData = {
+  //     Number: 0,
+  //     Name: "Информация по материалу",
+  //     Children: [
+  //       {
+  //         Number: 1,
+  //         Name: "Lee",
+  //         Children: [
+  //           { Name: "Nash", Children: [{ Name: "Tim" }] },
+  //           { Name: "Nicole" },
+  //           { Name: "Kelly" },
+  //         ],
+  //       },
+  //       { Number: 2, Name: "Alice" },
+  //       { Number: 3, Name: "Stanley" },
+  //     ],
+  //   };
+  //   setTreeData(demoData);
+
   const supplier_id = $("#suppliers_select").find(":selected").val();
   $.ajax({
     url: "",
     type: "get",
     data: {
-      query_name: "getSuppliersParameters",
+      query_name: "getSuppliersParametersTreeView",
       supplier_id: supplier_id, // get selected supplier_id
     },
     success: (response) => {
-      //   console.log(`success suppliersOnChanged(supplier_id=${supplier_id})`);
-      console.log(response.suppliers_parameters);
-      const json_obj = JSON.parse(response.suppliers_parameters);
-      //   console.log(json_obj);
-      $("#supplier_parameters_select").find("option").remove(); // remove all options
-      json_obj.forEach((element) => {
-        const supplier = element.fields;
-        $("#supplier_parameters_select").append(
-          `<option value=${supplier.supplier}>${supplier.parameter_name}</option>`
-        );
-      });
-      /*
-      https://stackoverflow.com/questions/4069982/document-getelementbyid-vs-jquery
-      """document.getElementById == jQuery $()?""""
-      document.getElementById('contents'); //returns a HTML DOM Object
-      var contents = $('#contents');  //returns a jQuery Object
-      var contents = $('#contents')[0]; //returns a HTML DOM Object
-      */
-      $("#supplier_parameters_select")[0].loadOptions(); // update dropdown menu options
+      //   console.log(response.json_tree_view);
+      if (response.json_tree_view != undefined) {
+        const data = JSON.parse(response.json_tree_view);
+        setTreeData(data); // update dropdown menu options
+      }
     },
     error: (response) => {
+      clearTree();
+      alert("Ошибка сервера.");
       console.log("error suppliersOnChanged()");
       console.log(response);
     },

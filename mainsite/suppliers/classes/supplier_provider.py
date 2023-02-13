@@ -19,21 +19,23 @@ class SupplierProvider:
                 DKCSupplier(),
             )
 
-    def try_get_data_from_script_with_parameters(self, supplier_id: int, params: dict):
+    def _find_supplier(self, supplier_id: int):
+        return list(filter(lambda supplier_: supplier_.pk == supplier_id, self._suppliers))
+
+    def get_data_with_parameters(self, supplier_id: int, params: dict):
         """
         Попробуй выполнить скрипт через api поставщика
         @param supplier_id: id поставщика
-        @param params:
+        @param params: параметры
         @return: Данные или None
         """
         if supplier_id < self.MINIMUM_SUPPLIER_ID:
             return
-        supplier = list(filter(lambda supplier_: supplier_.pk == supplier_id, self._suppliers))
+        supplier = self._find_supplier(supplier_id)
         if supplier:
             return supplier[0].get_data_from_api_with_parameters(params)
-        return None
 
-    def try_update_parameters_by_id(self, supplier_id: int):
+    def update_parameters_by_id(self, supplier_id: int):
         """
         Попробуй выполнить запрос к поставщику через api по id
         @param supplier_id: id поставщика
@@ -41,6 +43,18 @@ class SupplierProvider:
         """
         if supplier_id < self.MINIMUM_SUPPLIER_ID:
             return
-        supplier = list(filter(lambda supplier_: supplier_.pk == supplier_id, self._suppliers))
+        supplier = self._find_supplier(supplier_id)
         if supplier:
             supplier[0].update_new_supplier_params()
+
+    def get_tree_view_supplier_parameters(self, supplier_id: int):
+        """
+        Получить параметры поставщиков в виде TreeView
+        @param supplier_id: id поставщика
+        @return: параметры поставщика или None
+        """
+        if supplier_id < self.MINIMUM_SUPPLIER_ID:
+            return
+        supplier = self._find_supplier(supplier_id)
+        if supplier:
+            return supplier[0].get_tree_view_parameters()

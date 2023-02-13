@@ -2,6 +2,7 @@ import os.path
 import sys
 
 from .base_supplier import BaseSupplier
+from .hierarchical_tree import IdCounter
 from ..models import Supplier
 
 sys.path.append(os.path.abspath(rf'..'))
@@ -10,7 +11,6 @@ from DKC_API.main import get_materials, DkcObj, DkcAccessTokenError
 
 
 class DKCSupplier(BaseSupplier):
-
     def __init__(self, name: str = 'DKC API', pk=None):
         # trying to get id from db
         supplier = Supplier.objects.all().filter(name=name)
@@ -20,6 +20,71 @@ class DKCSupplier(BaseSupplier):
 
     def __str__(self):
         return f'DKCSupplier({super().__str__()})'
+
+    def get_tree_view_parameters(self) -> dict:
+        id_counter = IdCounter()
+        hierarchical_tree = {
+            'Number': id_counter.id,
+            'Name': "Материал DKC",
+            'Children': [
+                {
+                    'Number': id_counter.id,
+                    'Name': "Материал",
+                    'FieldName': "material",
+                    'Children': [
+                        {
+                            'Number': id_counter.id,
+                            'Name': "Информация по материалу",
+                        },
+                        {
+                            'Number': id_counter.id,
+                            'Name': "Фото материала",
+                        },
+                        {
+                            'Number': id_counter.id,
+                            'Name': "Атрибуты материала",
+                        },
+                        {
+                            'Number': id_counter.id,
+                            'Name': "ETIM атрибуты материала",
+                        },
+                        {
+                            'Number': id_counter.id,
+                            'Name': "Фасовка",
+                        },
+                    ]
+                },
+                {
+                    'Number': id_counter.id,
+                    'Name': "Сертификат",
+                },
+                {
+                    'Number': id_counter.id,
+                    'Name': "Аксессуары материала",
+                },
+                {
+                    'Number': id_counter.id,
+                    'Name': "Видео",
+                },
+                {
+                    'Number': id_counter.id,
+                    'Name': "Эскизы чертежей",
+                },
+                {
+                    'Number': id_counter.id,
+                    'Name': "Описание",
+                },
+                {
+                    'Number': id_counter.id,
+                    'Name': "Аналоги",
+                },
+                {
+                    'Number': id_counter.id,
+                    'Name': "Пересчет спецификации",
+                },
+            ]
+        }
+        return hierarchical_tree
 
     def get_data_from_api_with_parameters(self, params: dict):
         """

@@ -1,21 +1,21 @@
+import inspect
 import io
 import json
+import os.path
 import pprint
+import sys
 from datetime import datetime
 
 from django.core import serializers
 from django.http import JsonResponse, FileResponse
 from django.shortcuts import render
 
+from .classes.supplier_provider import SupplierProvider
 from .models import get_suppliers, SupplierParameter
-
-import sys
-import os.path
-
-from .classes.parameter_provider import SupplierProvider
 
 # print(sys.path)
 sys.path.append(os.path.abspath(rf'..'))
+from DKC_API.data_classes.material_record import MaterialRecord
 
 QUERY_NAME = 'query_name'
 
@@ -34,28 +34,37 @@ def is_ajax_query(request, query_name):
 def index_responses(request):
     if request.method == 'GET':
         # print(f'{request.GET=}')
-        if is_ajax_query(request, 'test'):
-            # print(f'request.GET={request.GET}')
-            # print(f'button_text={request.GET.get(QUERY_NAME)}')
-            t = datetime.now()
-            return JsonResponse({'seconds': t}, status=200)
-        if is_ajax_query(request, 'getSuppliersParameters') and \
+        # if is_ajax_query(request, 'getSuppliersParameters') and \
+        #         request.GET.get('supplier_id'):  # if have supplier_id
+        #
+        #     supplier_id = int(request.GET.get('supplier_id'))
+        #     # print(f'{supplier_id=}')
+        #
+        #     # долго! можно создать галочку ил кнопку с обновлением
+        #     # supplier_provider = SupplierProvider()
+        #     # supplier_provider.try_update_parameters_by_id(supplier_id)
+        #
+        #     supplier_parameters_query_set = SupplierParameter.objects.all().filter(supplier__pk=supplier_id)
+        #     suppliers_parameters = serializers.serialize('json',
+        #                                                  supplier_parameters_query_set)  # serialize query set to json
+        #     data = {
+        #         'suppliers_parameters': suppliers_parameters,
+        #     }
+        #     return JsonResponse(data, status=200)
+        if is_ajax_query(request, 'getSuppliersParametersTreeView') and \
                 request.GET.get('supplier_id'):  # if have supplier_id
-
             supplier_id = int(request.GET.get('supplier_id'))
-            # print(f'{supplier_id=}')
 
+            supplier_provider = SupplierProvider()
             # долго! можно создать галочку ил кнопку с обновлением
-            # supplier_provider = SupplierProvider()
             # supplier_provider.try_update_parameters_by_id(supplier_id)
 
-            supplier_parameters_query_set = SupplierParameter.objects.all().filter(supplier__pk=supplier_id)
-            suppliers_parameters = serializers.serialize('json',
-                                                         supplier_parameters_query_set)  # serialize query set to json
-            data = {
-                'suppliers_parameters': suppliers_parameters,
-            }
-            return JsonResponse(data, status=200)
+            tree_view = supplier_provider.get_tree_view_supplier_parameters(supplier_id)
+            # pprint.pprint(f'{tree_view_supplier_parameters_query_set=}', indent=2)
+            if tree_view:
+                json_tree_view = json.dumps(tree_view)
+                return JsonResponse({'json_tree_view': json_tree_view}, status=200)
+            return JsonResponse({}, status=500)
         if is_ajax_query(request, 'getMaterialsFile') and \
                 request.GET.get('supplier_id'):  # if have supplier_id
 
@@ -73,7 +82,7 @@ def index_responses(request):
             }
 
             supplier_provider = SupplierProvider()
-            data = supplier_provider.try_get_data_from_script_with_parameters(supplier_id, params)
+            data = supplier_provider.get_data_with_parameters(supplier_id, params)
 
             if data:
                 # pprint.pprint(data, indent=2)

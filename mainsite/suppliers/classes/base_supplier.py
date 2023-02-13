@@ -34,10 +34,18 @@ class BaseSupplier(ABC):
         pass
 
     @abstractmethod
-    def get_data_from_api_with_parameters(self, parameters: dict) -> object:
+    def get_data_from_api_with_parameters(self, parameters: dict):
         """
         Получить данные из api с параметрами
         @param parameters: парметры
+        """
+        pass
+
+    @abstractmethod
+    def get_tree_view_parameters(self) -> dict:
+        """
+        Получить иерархические параметры
+        @rtype: параматры поставщика
         """
         pass
 
