@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, is_dataclass, asdict
+from json import JSONEncoder
 from typing import List
 
 from DKC_API.data_classes.certificate import Certificate
@@ -19,3 +20,10 @@ class MaterialRecord:
     description: List[str] | None = None
     analogs: List[str] | None = None
     specification: List[str] | None = None
+
+
+class MaterialRecordEncoder(JSONEncoder):
+    def default(self, obj):
+        if is_dataclass(obj):
+            return asdict(obj)
+        return super().default(obj)

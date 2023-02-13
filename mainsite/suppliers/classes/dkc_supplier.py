@@ -1,4 +1,5 @@
 import os.path
+import pprint
 import sys
 
 from .base_supplier import BaseSupplier
@@ -52,11 +53,35 @@ class DKCSupplier(BaseSupplier):
                             'Number': id_counter.id,
                             'Name': "Фасовка",
                         },
+                        {
+                            'Number': id_counter.id,
+                            'Name': "Средняя доставка",
+                        },
+                        {
+                            'Number': id_counter.id,
+                            'Name': "Аксессуары",
+                        },
+                        {
+                            'Number': id_counter.id,
+                            'Name': "Коды аксессуаров",
+                        },
+                        {
+                            'Number': id_counter.id,
+                            'Name': "Скидка",
+                        },
                     ]
                 },
                 {
                     'Number': id_counter.id,
-                    'Name': "Сертификат",
+                    'Name': "Сертификаты материала",
+                },
+                {
+                    'Number': id_counter.id,
+                    'Name': "Остатки на складах",
+                },
+                {
+                    'Number': id_counter.id,
+                    'Name': "Сопутствующие материалы",
                 },
                 {
                     'Number': id_counter.id,
@@ -93,19 +118,15 @@ class DKCSupplier(BaseSupplier):
         @return:
         """
         material_codes = params.get('material_codes')
-        suppliers_parameters = params.get('suppliers_parameters')
         # print(f'{params=}')
-        # print(f'{material_codes=} {suppliers_parameters=}')
-        if material_codes and suppliers_parameters:
+        # print(f'{material_codes=}')
+        if material_codes:
             dkc = None  # create dkc obj for all materials responses
             try:
                 dkc = DkcObj()
             except DkcAccessTokenError as err:
                 print(err)
-            materials = get_materials(material_codes, params, dkc)
-            # print('DKCSupplier materials:')
-            # pprint.pprint(materials, indent=2)
-            return materials
+            return get_materials(material_codes, dkc)
         return None
 
     def get_supplier_parameters_from_api(self) -> tuple:

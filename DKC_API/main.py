@@ -23,15 +23,15 @@ def save_to_file(dkc, materials, filename):
         f.writelines(json_data)
 
 
-def get_materials(material_codes, params=None, dkc=None):
+def get_materials(material_codes, dkc=None):
     if dkc is None:
         try:
             dkc = DkcObj()
-            return dkc.get_materials(material_codes, params)
+            return dkc.get_materials(material_codes)
         except DkcAccessTokenError as err:
             print(err)
     else:
-        return dkc.get_materials(material_codes, params)
+        return dkc.get_materials(material_codes)
 
 
 def main():
@@ -40,7 +40,7 @@ def main():
         HEADERS['AccessToken'] = dkc.access_token
 
         material_codes = ['4400003']
-        materials = get_materials(material_codes, None, dkc)
+        materials = get_materials(material_codes, dkc)
         if materials and PRINT_TO_CONSOLE:
             pprint.pprint(materials)
         save_to_file(dkc, materials, 'load_data.txt')

@@ -142,9 +142,9 @@ function suppliersOnChanged() {
       supplier_id: supplier_id, // get selected supplier_id
     },
     success: (response) => {
-      //   console.log(response.json_tree_view);
-      if (response.json_tree_view != undefined) {
-        const data = JSON.parse(response.json_tree_view);
+      //   console.log(response.json_tree_view_supplier_parameters);
+      if (response.json_tree_view_supplier_parameters != undefined) {
+        const data = JSON.parse(response.json_tree_view_supplier_parameters);
         setTreeData(data); // update dropdown menu options
       }
     },
