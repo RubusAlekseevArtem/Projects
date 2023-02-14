@@ -3,9 +3,8 @@ import sys
 from dataclasses import dataclass
 from typing import List
 
-from .hierarchical_tree import IdCounter
-
 sys.path.append(os.path.abspath(rf'..'))
+from .id_counter import IdCounter
 from DKC_API.data_classes.material_record import MaterialRecord
 
 
@@ -69,53 +68,82 @@ class MaterialSaleGroup:
     sale: List | None = None,
 
 
+class BaseClass(object):
+    def __init__(self, class_type):
+        self._type = class_type
+
+
+def class_factory(name, args, base_class=BaseClass):
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            # here, the argnames variable is the one passed to the
+            # ClassFactory call
+            if key not in args:
+                raise TypeError("Argument %s not valid for %s"
+                                % (key, self.__class__.__name__))
+            setattr(self, key, value)
+        base_class.__init__(self, name[:-len("Class")])
+
+    new_class = type(name, (base_class,), {"__init__": __init__})
+    return new_class
+
+
 class TreeViewLinkOnMaterialRecord:
-    def __init__(self, material_record: MaterialRecord):
+
+    def get_parameter_by_tree_id(self, index: int) -> dict | None:
+        """
+
+        @type index: material_index
+        """
+        if index >= len(self._material_records) or index < 0:
+            return
         id_counter = IdCounter()
-        self.material_record = material_record
-        self.links = {
-            id_counter.id: self.material_record,  # Материал DKC
-            id_counter.id: self.material_record.material,  # Материал
+        return {
+            id_counter.id: self._material_records[index],  # Материал DKC
+            id_counter.id: self._material_records[index].material,  # Материал
             id_counter.id: MaterialInfoGroup(  # Информация по материалу
-                self.material_record.material.id,
-                self.material_record.material.node_id,
-                self.material_record.material.etim_class_id,
-                self.material_record.material.name,
-                self.material_record.material.type,
-                self.material_record.material.series,
-                self.material_record.material.country,
-                self.material_record.material.unit,
-                self.material_record.material.volume,
-                self.material_record.material.weight,
-                self.material_record.material.code,
-                self.material_record.material.url,
-                self.material_record.material.price,
-                self.material_record.material.no_price,
-                self.material_record.material.barcode),
+                self._material_records[index].material.id,
+                self._material_records[index].material.node_id,
+                self._material_records[index].material.etim_class_id,
+                self._material_records[index].material.name,
+                self._material_records[index].material.type,
+                self._material_records[index].material.series,
+                self._material_records[index].material.country,
+                self._material_records[index].material.unit,
+                self._material_records[index].material.volume,
+                self._material_records[index].material.weight,
+                self._material_records[index].material.code,
+                self._material_records[index].material.url,
+                self._material_records[index].material.price,
+                self._material_records[index].material.no_price,
+                self._material_records[index].material.barcode),
             id_counter.id: MaterialImageGroup(  # Фото материала
-                self.material_record.material.thumbnail_url,
-                self.material_record.material.additional_images),
+                self._material_records[index].material.thumbnail_url,
+                self._material_records[index].material.additional_images),
             id_counter.id: MaterialAttributesGroup(  # Атрибуты материала
-                self.material_record.material.attributes),
+                self._material_records[index].material.attributes),
             id_counter.id: MaterialEtimAttributesGroup(  # ETIM атрибуты материала
-                self.material_record.material.etim_attributes),
+                self._material_records[index].material.etim_attributes),
             id_counter.id: MaterialPackingGroup(
-                self.material_record.material.packing),  # Фасовка
+                self._material_records[index].material.packing),  # Фасовка
             id_counter.id: MaterialAvgDeliveryGroup(
-                self.material_record.material.avg_delivery),  # Средняя доставка
+                self._material_records[index].material.avg_delivery),  # Средняя доставка
             id_counter.id: MaterialAccessoriesGroup(
-                self.material_record.material.accessories),  # Аксессуары
+                self._material_records[index].material.accessories),  # Аксессуары
             id_counter.id: MaterialAccessoriesCodesGroup(
-                self.material_record.material.accessories_codes),  # Коды аксессуаров
+                self._material_records[index].material.accessories_codes),  # Коды аксессуаров
             id_counter.id: MaterialSaleGroup(
-                self.material_record.material.sale),  # Скидка
-            id_counter.id: self.material_record.certificates,  # Сертификаты материала
-            id_counter.id: self.material_record.stock,  # Остатки на складах
-            id_counter.id: self.material_record.related,  # Сопутствующие материалы
-            id_counter.id: self.material_record.accessories,  # Аксессуары материала
-            id_counter.id: self.material_record.videos,  # Видео
-            id_counter.id: self.material_record.drawings_sketch,  # Эскизы чертежей
-            id_counter.id: self.material_record.description,  # Описание
-            id_counter.id: self.material_record.analogs,  # Аналоги
-            id_counter.id: self.material_record.specification,  # Пересчет спецификации
+                self._material_records[index].material.sale),  # Скидка
+            id_counter.id: self._material_records[index].certificates,  # Сертификаты материала
+            id_counter.id: self._material_records[index].stock,  # Остатки на складах
+            id_counter.id: self._material_records[index].related,  # Сопутствующие материалы
+            id_counter.id: self._material_records[index].accessories,  # Аксессуары материала
+            id_counter.id: self._material_records[index].videos,  # Видео
+            id_counter.id: self._material_records[index].drawings_sketch,  # Эскизы чертежей
+            id_counter.id: self._material_records[index].description,  # Описание
+            id_counter.id: self._material_records[index].analogs,  # Аналоги
+            id_counter.id: self._material_records[index].specification,  # Пересчет спецификации
         }
+
+    def __init__(self, material_records: List[MaterialRecord]):
+        self._material_records = material_records

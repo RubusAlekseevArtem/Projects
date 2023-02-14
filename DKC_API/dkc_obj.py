@@ -158,7 +158,7 @@ def get_material(material_code: str):
             logging.info(f'status code 404: {message}')
             print(f'status code 404: {message}')
             return
-        material_json = get_material_response(material_code).json() \
+        material_json = material_response.json() \
             .get('material')
         material_certificates_json = get_certificates_response(material_code).json()
         material_videos_json = get_videos_response(material_code).json() \

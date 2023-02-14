@@ -1,9 +1,8 @@
 import os.path
-import pprint
 import sys
 
 from .base_supplier import BaseSupplier
-from .hierarchical_tree import IdCounter
+from .id_counter import IdCounter
 from ..models import Supplier
 
 sys.path.append(os.path.abspath(rf'..'))
@@ -29,9 +28,8 @@ class DKCSupplier(BaseSupplier):
             'Name': "Материал DKC",
             'Children': [
                 {
-                    'Number': id_counter.id,
+                    'Number': 'general',
                     'Name': "Материал",
-                    'FieldName': "material",
                     'Children': [
                         {
                             'Number': id_counter.id,

@@ -49,7 +49,7 @@ function downloadOnClick() {
     if (is_suppliers_selected == null) {
       alert("Выберите поставщика.");
     } else {
-      console.log("params=" + selected_tree_ids);
+      console.log(selected_tree_ids);
       if (selected_tree_ids.length == 0) {
         alert("Выберите параметры.");
       } else {
