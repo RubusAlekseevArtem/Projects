@@ -25,7 +25,7 @@ class DKCSupplier(BaseSupplier):
     def get_tree_view_parameters(self) -> dict:
         id_counter = IdCounter()
         hierarchical_tree = {
-            'Number': id_counter.id,
+            'Number': 'root',
             'Name': "Материал DKC",
             'Children': [
                 {
@@ -118,7 +118,7 @@ class DKCSupplier(BaseSupplier):
         """
         material_codes = params.get('material_codes')
         if material_codes:
-            dkc = None  # create dkc obj for all materials responses
+            dkc = None  # create dkc obj for all materials requests
             try:
                 dkc = DkcObj()
             except DkcAccessTokenError as err:

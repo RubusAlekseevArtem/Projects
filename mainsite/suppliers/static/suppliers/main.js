@@ -11,6 +11,9 @@ var conceptName = $('#aioConceptName').find(":selected").val();
 aioConceptName - id name
 */
 
+const QUERY_NAME = "query_name";
+const ERROR = "error";
+
 function download(filename, text) {
   var element = document.createElement("a");
   element.setAttribute(
@@ -57,7 +60,7 @@ function downloadOnClick() {
           url: "",
           type: "get",
           data: {
-            query_name: "getMaterialsFile",
+            QUERY_NAME: "get_materials_as_file",
             supplier_id: supplier_id,
             material_codes: material_codes,
             selected_tree_ids: selected_tree_ids,
@@ -138,7 +141,7 @@ function suppliersOnChanged() {
     url: "",
     type: "get",
     data: {
-      query_name: "getSuppliersParametersTreeView",
+      QUERY_NAME: "get_tree_view_of_supplier_parameters",
       supplier_id: supplier_id, // get selected supplier_id
     },
     success: (response) => {
