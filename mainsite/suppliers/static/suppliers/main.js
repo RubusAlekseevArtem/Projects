@@ -49,6 +49,7 @@ function downloadOnClick() {
     const material_codes = trim_material_codes
       .split("\n")
       .map((s) => s.trim())
+      .filter((s) => s != "")
       .sort();
 
     console.log(material_codes);

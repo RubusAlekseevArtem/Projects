@@ -2,6 +2,7 @@ import io
 import json
 import os.path
 import sys
+from datetime import datetime
 
 from django.http import JsonResponse, FileResponse
 from django.shortcuts import render
@@ -44,7 +45,6 @@ def response_by_query_name(request, query_name):
         print(f'{request.GET=}')
         if is_query(request, query_name, 'get_tree_view_of_supplier_parameters'):
             if request.GET.get('supplier_id'):  # if have supplier_id
-                print('qweeqwe')
                 supplier_id = int(request.GET.get('supplier_id'))
 
                 supplier_provider = SupplierProvider()
@@ -60,6 +60,7 @@ def response_by_query_name(request, query_name):
             return create_error_json_response(NO_SUPPLIER_ID_MESSAGE)
         if is_query(request, query_name, 'get_materials_as_file'):
             if request.GET.get('supplier_id'):  # if have supplier_id
+                t1 = datetime.now()
                 supplier_id = int(request.GET.get('supplier_id'))
                 material_codes = request.GET.getlist('material_codes[]')
                 selected_tree_ids = request.GET.getlist('selected_tree_ids[]')
@@ -94,6 +95,8 @@ def response_by_query_name(request, query_name):
                     # if you pass a file-like object like io.BytesIO, it’s your task to seek()
                     # it before passing it to FileResponse.
                     buf.seek(0)
+                    t2 = datetime.now()
+                    print(t2 - t1)
                     return FileResponse(buf, status=200, as_attachment=True)
                 else:
                     return create_error_json_response('Из списка материалов не удалось получить данные из API')
@@ -104,10 +107,6 @@ def response_by_query_name(request, query_name):
 def index(request):
     context = {
         'title': 'Данные поставщиков',
-        'suppliers': get_suppliers(),
-        'supplier_parameters': [],
-        'is_multiple': True,
-        'max_items_in_dropdown_menu': 3,
-        'select_all': False,
+        'suppliers': get_suppliers()
     }
     return render(request, 'suppliers/index.html', context)
