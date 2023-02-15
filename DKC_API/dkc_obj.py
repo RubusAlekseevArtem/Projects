@@ -2,8 +2,7 @@ import logging
 from typing import List
 
 from requests import HTTPError, get, JSONDecodeError, Response
-
-SLEEP_DELAY = 0.1  # seconds
+from DKC_API.private_file import HEADERS, BASE_URL, MASTER_KEY
 
 
 def get_catalog_material_response(
@@ -21,14 +20,10 @@ def get_catalog_material_response(
     material_url = f'{BASE_URL}/catalog/material{catalog_path}?code={material_code}'
     logging.info(f'{log_info} (from {material_url})')
     try:
-        # sleep(SLEEP_DELAY)
         return get(material_url, headers=HEADERS)
     except Exception as err:
         logging.error(err.args)
     return None
-
-
-from .private_file import HEADERS, BASE_URL, MASTER_KEY
 
 
 def get_material_response(material_code: str):
@@ -156,13 +151,6 @@ def create_material(material_response: Response, material_code: str):
     return material
 
 
-class HttpResponseError(Exception):
-    """Error when receiving a response"""
-
-    def __init__(self):
-        super().__init__(self.__doc__)
-
-
 # !!! don't change !!!
 MATERIAL_NAME = 'material'
 CERTIFICATES_NAME = 'certificates'
@@ -238,7 +226,8 @@ class DkcObj:
                 print(f'Запрос по товару - \'{material_code}\' получен.')
                 result.append(material)
             else:
-                logging.info(f'Material with material_code=\'{material_code}\' does not exist')
-                print(f'Материал с кодом {material_code} не найден.')
+                message = f'Материал с кодом {material_code} не найден.'
+                print(message)
+                logging.info(message)
         logging.info(f'-' * 100)
         return result
