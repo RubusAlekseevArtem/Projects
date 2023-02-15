@@ -1,6 +1,7 @@
 import io
 import json
 import os.path
+import pprint
 import sys
 from datetime import datetime
 
@@ -51,6 +52,7 @@ def response_by_query_name(request, query_name):
                 # supplier_provider.try_update_parameters_by_id(supplier_id) # долго!
                 tree_view_supplier_parameters = supplier_provider.get_tree_view_supplier_parameters(supplier_id)
 
+                # pprint.pprint(tree_view_supplier_parameters, indent=4, sort_dicts=False)
                 if tree_view_supplier_parameters:
                     json_tree_view_supplier_parameters = json.dumps(tree_view_supplier_parameters)
                     return create_json_response(

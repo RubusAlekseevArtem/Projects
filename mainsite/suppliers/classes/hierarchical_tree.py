@@ -51,5 +51,10 @@ class BaseHierarchicalTree:
     def find_node_by_name(self, name: str):
         return self._find_node_by_name(self.root, name)
 
+    def _create_tree(self):
+        if self.root:
+            return self.root.create_node()
+        return None
+
     def create_tree(self):
-        return
+        return self._create_tree()

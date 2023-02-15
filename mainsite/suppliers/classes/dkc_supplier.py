@@ -1,9 +1,11 @@
 import logging
 import os.path
+import pprint
 import sys
 
 from .base_supplier import BaseSupplier
 from .dkc_hierarchical_tree import DkcHierarchicalTree
+from .hierarchical_tree import BaseHierarchicalTree
 from .id_counter import IdCounter
 from ..models import Supplier
 
@@ -23,7 +25,7 @@ class DKCSupplier(BaseSupplier):
     def __str__(self):
         return f'DKCSupplier({super().__str__()})'
 
-    def get_tree_view_parameters(self) -> dict:
+    def get_tree_view_parameters(self) -> BaseHierarchicalTree:
         # id_counter = IdCounter()
         # hierarchical_tree = {
         #     'Number': 'root',
@@ -112,8 +114,8 @@ class DKCSupplier(BaseSupplier):
         # return hierarchical_tree
 
         dkc_hierarchical_tree = DkcHierarchicalTree()
-        print(f'{dkc_hierarchical_tree=}')
-        return dkc_hierarchical_tree.create_tree()
+        hierarchical_tree = dkc_hierarchical_tree.create_tree()
+        return hierarchical_tree
 
     def get_data_from_api_with_parameters(self, params: dict):
         """

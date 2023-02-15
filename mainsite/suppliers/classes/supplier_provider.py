@@ -2,6 +2,7 @@ from typing import List
 
 from .base_supplier import BaseSupplier
 from .dkc_supplier import DKCSupplier
+from .hierarchical_tree import BaseHierarchicalTree
 
 
 class SupplierProvider:
@@ -47,7 +48,7 @@ class SupplierProvider:
         if supplier:
             supplier[0].update_new_supplier_params()
 
-    def get_tree_view_supplier_parameters(self, supplier_id: int):
+    def get_tree_view_supplier_parameters(self, supplier_id: int) -> BaseHierarchicalTree | None:
         """
         Получить параметры поставщиков в виде TreeView
         @param supplier_id: id поставщика
