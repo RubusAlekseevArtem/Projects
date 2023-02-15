@@ -22,8 +22,9 @@ def is_ajax(request):
     return request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
 
-def is_ajax_query(request, query_name):
-    return request.GET.get(QUERY_NAME) == query_name and is_ajax(request)
+def is_query(request, query_name: str, server_query_name: str):
+    return is_ajax(request) and \
+        query_name == server_query_name
 
 
 def create_error_json_response(message: str):
@@ -38,11 +39,12 @@ NO_SUPPLIER_ID_MESSAGE = f'Json don\'t have supplier_id'
 WAS_NOT_QUERY_NAME_MESSAGE = f'The QUERY_NAME was not found.'
 
 
-def suppliers_params(request):
-    if request.method == 'GET':
-        # print(f'{request.GET=}')
-        if is_ajax_query(request, 'get_tree_view_of_supplier_parameters'):
-            if request.GET.get('supplier_id'):
+def response_by_query_name(request, query_name):
+    if request.method == 'GET' and query_name:
+        print(f'{request.GET=}')
+        if is_query(request, query_name, 'get_tree_view_of_supplier_parameters'):
+            if request.GET.get('supplier_id'):  # if have supplier_id
+                print('qweeqwe')
                 supplier_id = int(request.GET.get('supplier_id'))
 
                 supplier_provider = SupplierProvider()
@@ -53,8 +55,10 @@ def suppliers_params(request):
                     json_tree_view_supplier_parameters = json.dumps(tree_view_supplier_parameters)
                     return create_json_response(
                         {'json_tree_view_supplier_parameters': json_tree_view_supplier_parameters})
+                else:
+                    return create_error_json_response('Нет доступных параметров')
             return create_error_json_response(NO_SUPPLIER_ID_MESSAGE)
-        if is_ajax_query(request, 'get_materials_as_file'):
+        if is_query(request, query_name, 'get_materials_as_file'):
             if request.GET.get('supplier_id'):  # if have supplier_id
                 supplier_id = int(request.GET.get('supplier_id'))
                 material_codes = request.GET.getlist('material_codes[]')
@@ -91,7 +95,8 @@ def suppliers_params(request):
                     # it before passing it to FileResponse.
                     buf.seek(0)
                     return FileResponse(buf, status=200, as_attachment=True)
-                return JsonResponse({}, status=500)
+                else:
+                    return create_error_json_response('Из списка материалов не удалось получить данные из API')
             return create_error_json_response(NO_SUPPLIER_ID_MESSAGE)
         return create_error_json_response(WAS_NOT_QUERY_NAME_MESSAGE)
 

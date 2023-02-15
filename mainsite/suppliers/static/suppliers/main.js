@@ -13,6 +13,15 @@ aioConceptName - id name
 
 const QUERY_NAME = "query_name";
 const ERROR = "error";
+const TREE_NAME = "supplier_parameters_tree";
+
+function show_error(error = "") {
+  if (typeof error === "string" || error instanceof String) {
+    alert(error);
+  } else {
+    alert("Ошибка сервера.");
+  }
+}
 
 function download(filename, text) {
   var element = document.createElement("a");
@@ -57,10 +66,9 @@ function downloadOnClick() {
         alert("Выберите параметры.");
       } else {
         $.ajax({
-          url: "",
+          url: "get_materials_as_file",
           type: "get",
           data: {
-            QUERY_NAME: "get_materials_as_file",
             supplier_id: supplier_id,
             material_codes: material_codes,
             selected_tree_ids: selected_tree_ids,
@@ -72,16 +80,15 @@ function downloadOnClick() {
             download("data.txt", response);
           },
           error: (response) => {
-            console.log(response);
-            alert("Ошибка сервера.");
+            const error = response.responseJSON[ERROR];
+            show_error(error);
+            console.log(error);
           },
         });
       }
     }
   }
 }
-
-const TREE_NAME = "supplier_parameters_tree";
 
 function clearTree() {
   $(".tree").empty();
@@ -138,13 +145,13 @@ function suppliersOnChanged() {
 
   const supplier_id = $("#suppliers_select").find(":selected").val();
   $.ajax({
-    url: "",
+    url: "get_tree_view_of_supplier_parameters",
     type: "get",
     data: {
-      QUERY_NAME: "get_tree_view_of_supplier_parameters",
       supplier_id: supplier_id, // get selected supplier_id
     },
     success: (response) => {
+      $(".button_input").attr("disabled", false);
       //   console.log(response.json_tree_view_supplier_parameters);
       if (response.json_tree_view_supplier_parameters != undefined) {
         const data = JSON.parse(response.json_tree_view_supplier_parameters);
@@ -153,9 +160,10 @@ function suppliersOnChanged() {
     },
     error: (response) => {
       clearTree();
-      alert("Ошибка сервера.");
-      console.log("error suppliersOnChanged()");
-      console.log(response);
+      $(".button_input").attr("disabled", true);
+      const error = response.responseJSON[ERROR];
+      show_error(error);
+      console.log(error);
     },
   });
 }
