@@ -1,3 +1,4 @@
+import logging
 import os.path
 import sys
 
@@ -116,14 +117,13 @@ class DKCSupplier(BaseSupplier):
         @return:
         """
         material_codes = params.get('material_codes')
-        # print(f'{params=}')
-        # print(f'{material_codes=}')
         if material_codes:
             dkc = None  # create dkc obj for all materials responses
             try:
                 dkc = DkcObj()
             except DkcAccessTokenError as err:
                 print(err)
+                logging.error(err)
             return get_materials(material_codes, dkc)
         return None
 

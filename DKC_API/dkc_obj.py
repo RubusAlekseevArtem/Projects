@@ -1,14 +1,7 @@
 import logging
-from json import JSONDecodeError
 from typing import List
 
-from requests import HTTPError, get
-
-from .data_classes.certificate import Certificate
-from .data_classes.material import Material
-from .data_classes.stock import Stock
-from .data_classes.video import Video
-from DKC_API.data_classes.material_record import MaterialRecord
+from requests import HTTPError, get, JSONDecodeError, Response
 
 SLEEP_DELAY = 0.1  # seconds
 
@@ -118,83 +111,81 @@ def get_specification_response(material_code: str):
     )
 
 
-def create_material_record(
-        material: dict,
-        material_certificates: List[dict],
-        material_videos: List[dict],
-        material_stock: dict,
-        material_related: List[str],
-        material_accessories: List[str],
-        material_drawings_sketch: List[str],
-        material_description: List[str],
-        material_analogs: List[str],
-        material_specification: List[str],
-) -> MaterialRecord:
-    # material_data.pop('sale') # test unpacking
-    record = MaterialRecord()
+def create_material(material_response: Response, material_code: str):
+    """
 
-    record.material = Material(**material)
-    record.certificates = [Certificate(**material_certificate) for material_certificate in material_certificates]
-    record.videos = [Video(**material_video) for material_video in material_videos]
-    record.stock = Stock(**material_stock)
-    record.related = material_related
-    record.accessories = material_accessories
-    record.drawings_sketch = material_drawings_sketch
-    record.description = material_description
-    record.analogs = material_analogs
-    record.specification = material_specification
-
-    return record
-
-
-def get_material(material_code: str):
-    result_object = MaterialRecord()
+    @param material_response:
+    @param material_code:
+    @return: None or dict material
+    """
     try:
-        material_response = get_material_response(material_code)
-        # print(material_response)
-        if material_response.status_code == 404:
-            material_json = get_material_response(material_code).json()
-            message = material_json.get("message")
-            logging.info(f'status code 404: {message}')
-            print(f'status code 404: {message}')
-            return
         material_json = material_response.json() \
-            .get('material')
+            .get(MATERIAL_NAME)
         material_certificates_json = get_certificates_response(material_code).json()
-        material_videos_json = get_videos_response(material_code).json() \
-            .get('video').get(material_code)
         material_stock_json = get_stock_response(material_code).json()
         material_related_json = get_related_response(material_code).json() \
-            .get('related').get(material_code)
+            .get(RELATED_NAME).get(material_code)
         material_accessories_json = get_accessories_response(material_code).json() \
-            .get('accessories').get(material_code)
+            .get(ACCESSORIES_NAME).get(material_code)
+        material_videos_json = get_videos_response(material_code).json() \
+            .get(VIDEO_NAME).get(material_code)
         material_drawings_sketch_json = get_drawings_sketch_response(material_code).json() \
-            .get('drawings_sketch').get(material_code)
+            .get(DRAWINGS_SKETCH_NAME).get(material_code)
         material_description_json = get_description_response(material_code).json() \
-            .get('description').get(material_code)
+            .get(DESCRIPTION_NAME).get(material_code)
         material_analogs_json = get_analogs_response(material_code).json() \
-            .get('analogs').get(material_code)
+            .get(ANALOGS_NAME).get(material_code)
         material_specification_json = get_specification_response(material_code).json() \
-            .get('specification').get(material_code)
-        try:
-            result_object = create_material_record(
-                material_json,
-                material_certificates_json,
-                material_videos_json,
-                material_stock_json,
-                material_related_json,
-                material_accessories_json,
-                material_drawings_sketch_json,
-                material_description_json,
-                material_analogs_json,
-                material_specification_json
-            )
-        except TypeError as err:
-            logging.error(f'Don\'t create material record: {err}')
+            .get(SPECIFICATION_NAME).get(material_code)
+        material = {
+            MATERIAL_NAME: material_json,
+            CERTIFICATES_NAME: material_certificates_json,
+            STOCK_NAME: material_stock_json,
+            RELATED_NAME: material_related_json,
+            ACCESSORIES_NAME: material_accessories_json,
+            VIDEO_NAME: material_videos_json,
+            DRAWINGS_SKETCH_NAME: material_drawings_sketch_json,
+            DESCRIPTION_NAME: material_description_json,
+            ANALOGS_NAME: material_analogs_json,
+            SPECIFICATION_NAME: material_specification_json,
+        }
     except JSONDecodeError as err:
         print(err.args)
         logging.error(err)
-    return result_object
+        return
+    return material
+
+
+class HttpResponseError(Exception):
+    """Error when receiving a response"""
+
+    def __init__(self):
+        super().__init__(self.__doc__)
+
+
+# !!! don't change !!!
+MATERIAL_NAME = 'material'
+CERTIFICATES_NAME = 'certificates'
+STOCK_NAME = 'stock'
+RELATED_NAME = 'related'
+ACCESSORIES_NAME = 'accessories'
+VIDEO_NAME = 'video'
+DRAWINGS_SKETCH_NAME = 'drawings_sketch'
+DESCRIPTION_NAME = 'description'
+ANALOGS_NAME = 'analogs'
+SPECIFICATION_NAME = 'specification'
+
+
+def get_material(material_code: str):
+    material_response = get_material_response(material_code)
+    try:
+        material_response.raise_for_status()
+    except HTTPError as err:
+        message = material_response.json().get("message")
+        print(f'Ошибка по коду \'{material_code}\' - {material_response.status_code} {message}')
+        logging.error(err)
+        return  # return if bad status_cod
+    return create_material(material_response, material_code)
 
 
 class DkcAccessTokenError(Exception):
@@ -205,6 +196,7 @@ class DkcAccessTokenError(Exception):
 
 
 class DkcObj:
+
     def __init__(self):
         self.base_encoding = 'UTF-8'
         self.AUTH_URL = f'{BASE_URL}/auth.access.token/{MASTER_KEY}'

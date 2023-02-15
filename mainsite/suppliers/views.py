@@ -68,23 +68,22 @@ def index_responses(request):
             }
             supplier_provider = SupplierProvider()
             material_records = supplier_provider.get_data_with_parameters(supplier_id, params)
-            print(len(material_records))
 
             if material_records:
                 # filter by tree fields ids fields
-                result_data = []
-                link_on_material_record = TreeViewLinkOnMaterialRecord(material_records)  # links on treeview
-                for index_, material_record in enumerate(material_records):
-                    # print(f'{index_=}')
-                    parameter_link = link_on_material_record.get_parameter_by_tree_id(index_)
-                    if parameter_link:
-                        # print(parameter_link)
-                        # res_object = create_result_object(parameter_link, selected_tree_ids)
-                        # result_data.append(res_object)
+                # result_data = []
+                # link_on_material_record = TreeViewLinkOnMaterialRecord(material_records)  # links on treeview
+                # for index_, material_record in enumerate(material_records):
+                #     # print(f'{index_=}')
+                #     parameter_link = link_on_material_record.get_parameter_by_tree_id(index_)
+                #     if parameter_link:
+                #         # print(parameter_link)
+                #         # res_object = create_result_object(parameter_link, selected_tree_ids)
+                #         # result_data.append(res_object)
+                #
+                #         result_data.append(parameter_link)
 
-                        result_data.append(parameter_link)
-
-                json_data = json.dumps(result_data, cls=MaterialRecordEncoder, indent=4, ensure_ascii=False)
+                json_data = json.dumps(material_records, indent=4, ensure_ascii=False)
                 json_bytes_data = json_data.encode('utf-8')  # to bytes
                 buf = io.BytesIO()
                 buf.write(json_bytes_data)
