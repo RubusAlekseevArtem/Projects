@@ -114,7 +114,7 @@ class DKCSupplier(BaseSupplier):
         # return hierarchical_tree
 
         dkc_hierarchical_tree = DkcHierarchicalTree()
-        hierarchical_tree = dkc_hierarchical_tree.create_tree()
+        hierarchical_tree = dkc_hierarchical_tree.create_hierarchical_tree()
         return hierarchical_tree
 
     def get_data_from_api_with_parameters(self, params: dict):

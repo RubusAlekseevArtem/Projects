@@ -22,7 +22,7 @@ class Node:
         return f'Node({self.__str__()})'
 
     def has_children(self):
-        return len(self.children)
+        return len(self.children) > 0
 
     def create_node(self):
         def _create_node(node: Node):
@@ -34,9 +34,47 @@ class Node:
 
         return _create_node(self)
 
+    def find_node_by_number(self, number: str):
+        def _find_node_by_number(node: Node, number_: str):
+            def __find_node_by_number(children: List[Node], number__: str):
+                for child in children:
+                    if child.number == number__:
+                        return child
+                    elif child.has_children():
+                        return __find_node_by_number(child.children, number__)
+                return None
+
+            if node:
+                if node.number == number_:
+                    return node
+                elif node.has_children():
+                    return __find_node_by_number(node.children, number_)
+            return None
+
+        return _find_node_by_number(self, number)
+
+    def find_node_by_name(self, name: str):
+        def _find_node_by_name(node: Node, name_: str):
+            def __find_node_by_name(children: List[Node], name__: str):
+                for child in children:
+                    if child.name == name__:
+                        return child
+                    elif child.has_children():
+                        return __find_node_by_name(child.children, name__)
+                return None
+
+            if node:
+                if node.name == name_:
+                    return node
+                elif node.has_children():
+                    return __find_node_by_name(node.children, name_)
+            return None
+
+        return _find_node_by_name(self, name)
+
 
 if __name__ == '__main__':
-    node = Node(
+    main_node = Node(
         'root',
         'Материал DKC',
         [
@@ -45,4 +83,4 @@ if __name__ == '__main__':
             Node('stock', 'Остатки на складах'),
         ]
     )
-    pprint.pprint(node.create_node(), indent=4, sort_dicts=False)
+    pprint.pprint(main_node.create_node(), indent=4, sort_dicts=False)
