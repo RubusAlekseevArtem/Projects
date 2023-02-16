@@ -98,7 +98,10 @@ def response_by_query_name(request, query_name):
                     # it before passing it to FileResponse.
                     buf.seek(0)
                     t2 = datetime.now()
-                    print(t2 - t1)
+                    processing_time = t2 - t1
+                    print(f'Processing time = {processing_time}')
+                    average_processing_time = processing_time / len(material_records)
+                    print(f'Average processing time = {average_processing_time}')
                     return FileResponse(buf, status=200, as_attachment=True)
                 else:
                     return create_error_json_response('Из списка материалов не удалось получить данные из API')

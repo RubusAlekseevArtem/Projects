@@ -2,7 +2,7 @@ from .hierarchical_tree import BaseHierarchicalTree
 from .node import Node
 
 
-class DkcHierarchicalTree(BaseHierarchicalTree):
+class DkcHierarchicalTreeParameters(BaseHierarchicalTree):
     def __init__(self):
         root_node = Node(
             'dkc_material', 'Материал DKC',

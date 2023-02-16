@@ -7,13 +7,31 @@ For selected text
 var conceptName = $('#aioConceptName').find(":selected").text();
 For selected value
 var conceptName = $('#aioConceptName').find(":selected").val();
-
 aioConceptName - id name
+
+timeout:
+##########################
+This will make sure that the error callback is fired if the server doesn't respond within a particular time limit.
+
+$.ajax({
+    url: "//myapi.com/json",
+    dataType: "jsonp",
+    timeout: 15000 // adjust the limit. currently its 15 seconds
+}).done(function (data) {
+    selectText('Id', data.country);
+}).fail(function (jqXHR, textStatus, errorThrown) {
+    var defaultOption = 'US'
+    selectDropdownByText('Id', defaultOption);
+    console.log(errorThrown);
+});
+This will trigger the fail callback when there is no internet as well.
+##########################
 */
 
 const QUERY_NAME = "query_name";
 const ERROR = "error";
 const TREE_NAME = "supplier_parameters_tree";
+const TIMEOUT = 15_000; // adjust the limit. currently its 15 seconds
 
 function show_error(error = "") {
   if (typeof error === "string" || error instanceof String) {
@@ -74,18 +92,19 @@ function downloadOnClick() {
             material_codes: material_codes,
             selected_tree_ids: selected_tree_ids,
           },
-          success: (response) => {
-            //   console.log(new TextDecoder().decode(response));
-            //   console.log(response); // response - binary text
-            //   response = String.fromCharCode(response);
+          timeout: TIMEOUT,
+        })
+          .done((response) => {
             download("data.txt", response);
-          },
-          error: (response) => {
-            const error = response.responseJSON[ERROR];
-            show_error(error);
-            console.log(error);
-          },
-        });
+          })
+          .fail((response) => {
+            if (response.responseJSON != undefined) {
+              const error = response.responseJSON[ERROR];
+              show_error(error);
+              console.log(error);
+            }
+            alert(getErrorMessage(response.status));
+          });
       }
     }
   }
@@ -117,6 +136,20 @@ function setTreeData(data = {}) {
       console.log(vals);
     },
   });
+}
+
+function getErrorMessage(status) {
+  let message = "";
+  switch (status) {
+    case 0:
+      message = "Нет соединения. Проверьте соединение c сервером";
+      break;
+
+    default:
+      message = `Сообщение об ошибке по коду ${status} не реализовано`;
+      break;
+  }
+  return message;
 }
 
 function suppliersOnChanged() {
@@ -151,20 +184,31 @@ function suppliersOnChanged() {
     data: {
       supplier_id: supplier_id, // get selected supplier_id
     },
-    success: (response) => {
+    timeout: TIMEOUT,
+  })
+    .done((response, status, jqXHR) => {
       $(".button_input").attr("disabled", false);
       //   console.log(response.json_tree_view_supplier_parameters);
       if (response.json_tree_view_supplier_parameters != undefined) {
         const data = JSON.parse(response.json_tree_view_supplier_parameters);
         setTreeData(data); // update dropdown menu options
       }
-    },
-    error: (response) => {
-      clearTree();
+    })
+    .fail((response, status, errorThrown) => {
+      //   console.log(response);
+      //   console.log(status);
+      //   console.log(errorThrown);
+
+      clearTree(); // if error clear tree of parameters
       $(".button_input").attr("disabled", true);
-      const error = response.responseJSON[ERROR];
-      show_error(error);
-      console.log(error);
-    },
-  });
+      //   console.log(response.responseJSON);
+      if (response.responseJSON != undefined) {
+        const error = response.responseJSON[ERROR];
+        show_error(error);
+        console.log(error);
+        return;
+      }
+
+      alert(getErrorMessage(response.status));
+    });
 }

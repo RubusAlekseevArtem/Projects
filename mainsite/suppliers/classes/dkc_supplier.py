@@ -1,12 +1,10 @@
 import logging
 import os.path
-import pprint
 import sys
 
 from .base_supplier import BaseSupplier
-from .dkc_hierarchical_tree import DkcHierarchicalTree
+from .dkc_hierarchical_tree import DkcHierarchicalTreeParameters
 from .hierarchical_tree import BaseHierarchicalTree
-from .id_counter import IdCounter
 from ..models import Supplier
 
 sys.path.append(os.path.abspath(rf'..'))
@@ -26,95 +24,8 @@ class DKCSupplier(BaseSupplier):
         return f'DKCSupplier({super().__str__()})'
 
     def get_tree_view_parameters(self) -> BaseHierarchicalTree:
-        # id_counter = IdCounter()
-        # hierarchical_tree = {
-        #     'Number': 'root',
-        #     'Name': "Материал DKC",
-        #     'Children': [
-        #         {
-        #             'Number': 'general_params',
-        #             'Name': "Материал",
-        #             'Children': [
-        #                 {
-        #                     'Number': id_counter.id,
-        #                     'Name': "Информация по материалу",
-        #                 },
-        #                 {
-        #                     'Number': id_counter.id,
-        #                     'Name': "Фото материала",
-        #                 },
-        #                 {
-        #                     'Number': id_counter.id,
-        #                     'Name': "Атрибуты материала",
-        #                 },
-        #                 {
-        #                     'Number': id_counter.id,
-        #                     'Name': "ETIM атрибуты материала",
-        #                 },
-        #                 {
-        #                     'Number': id_counter.id,
-        #                     'Name': "Фасовка",
-        #                 },
-        #                 {
-        #                     'Number': id_counter.id,
-        #                     'Name': "Средняя доставка",
-        #                 },
-        #                 {
-        #                     'Number': id_counter.id,
-        #                     'Name': "Аксессуары",
-        #                 },
-        #                 {
-        #                     'Number': id_counter.id,
-        #                     'Name': "Коды аксессуаров",
-        #                 },
-        #                 {
-        #                     'Number': id_counter.id,
-        #                     'Name': "Скидка",
-        #                 },
-        #             ]
-        #         },
-        #         {
-        #             'Number': id_counter.id,
-        #             'Name': "Сертификаты материала",
-        #         },
-        #         {
-        #             'Number': id_counter.id,
-        #             'Name': "Остатки на складах",
-        #         },
-        #         {
-        #             'Number': id_counter.id,
-        #             'Name': "Сопутствующие материалы",
-        #         },
-        #         {
-        #             'Number': id_counter.id,
-        #             'Name': "Аксессуары материала",
-        #         },
-        #         {
-        #             'Number': id_counter.id,
-        #             'Name': "Видео",
-        #         },
-        #         {
-        #             'Number': id_counter.id,
-        #             'Name': "Эскизы чертежей",
-        #         },
-        #         {
-        #             'Number': id_counter.id,
-        #             'Name': "Описание",
-        #         },
-        #         {
-        #             'Number': id_counter.id,
-        #             'Name': "Аналоги",
-        #         },
-        #         {
-        #             'Number': id_counter.id,
-        #             'Name': "Пересчет спецификации",
-        #         },
-        #     ]
-        # }
-        # return hierarchical_tree
-
-        dkc_hierarchical_tree = DkcHierarchicalTree()
-        hierarchical_tree = dkc_hierarchical_tree.create_hierarchical_tree()
+        dkc_hierarchical_tree_parameters = DkcHierarchicalTreeParameters()
+        hierarchical_tree = dkc_hierarchical_tree_parameters.create_hierarchical_tree_parameters()
         return hierarchical_tree
 
     def get_data_from_api_with_parameters(self, params: dict):

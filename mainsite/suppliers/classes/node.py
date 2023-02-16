@@ -24,7 +24,7 @@ class Node:
     def has_children(self):
         return len(self.children) > 0
 
-    def create_node(self):
+    def create_hierarchical_tree(self):
         def _create_node(node: Node):
             return {
                 self.NUMBER_KEY: node.number,
@@ -83,4 +83,4 @@ if __name__ == '__main__':
             Node('stock', 'Остатки на складах'),
         ]
     )
-    pprint.pprint(main_node.create_node(), indent=4, sort_dicts=False)
+    pprint.pprint(main_node.create_hierarchical_tree(), indent=4, sort_dicts=False)

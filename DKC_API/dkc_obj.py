@@ -132,7 +132,7 @@ def create_material(material_response: Response, material_code: str):
             .get(ANALOGS_NAME).get(material_code)
         material_specification_json = get_specification_response(material_code).json() \
             .get(SPECIFICATION_NAME).get(material_code)
-        material = {
+        return {
             MATERIAL_NAME: material_json,
             CERTIFICATES_NAME: material_certificates_json,
             STOCK_NAME: material_stock_json,
@@ -145,10 +145,11 @@ def create_material(material_response: Response, material_code: str):
             SPECIFICATION_NAME: material_specification_json,
         }
     except JSONDecodeError as err:
-        print(err.args)
+        print(err)
         logging.error(err)
-        return
-    return material
+    except AttributeError as err:
+        print(f'Нет ответа по коду - \'{material_code}\'')
+        logging.error(err)
 
 
 # !!! don't change !!!
@@ -170,7 +171,7 @@ def get_material(material_code: str):
         material_response.raise_for_status()
     except HTTPError as err:
         message = material_response.json().get("message")
-        print(f'Ошибка по коду \'{material_code}\' - {material_response.status_code} {message}')
+        print(f'Ошибка по коду \'{material_code}\': code={material_response.status_code} {message}')
         logging.error(err)
         return  # return if bad status_cod
     return create_material(material_response, material_code)
@@ -226,7 +227,7 @@ class DkcObj:
                 print(f'Запрос по товару - \'{material_code}\' получен.')
                 result.append(material)
             else:
-                message = f'Материал с кодом {material_code} не найден.'
+                message = f'Материал с кодом \'{material_code}\' не найден.'
                 print(message)
                 logging.info(message)
         logging.info(f'-' * 100)

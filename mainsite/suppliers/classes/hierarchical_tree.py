@@ -11,20 +11,21 @@ class BaseHierarchicalTree:
     def __repr__(self):
         return f'{self.__class__.__name__}({self.__str__()})'
 
-    def _create_hierarchical_tree(self):
-        if self.root:
-            return self.root.create_node()
-        return None
-
     def find_node_by_name(self, name: str):
         return self.root.find_node_by_name(name)
 
     def find_node_by_number(self, number: str):
         return self.root.find_node_by_number(number)
 
-    def create_hierarchical_tree(self):
+    def create_hierarchical_tree_parameters(self):
         """
-        Создать иерархическое дерево из данного класса
+        Создать иерархическое дерево
         @return:
         """
-        return self._create_hierarchical_tree()
+
+        def _create_hierarchical_tree():
+            if self.root:
+                return self.root.create_hierarchical_tree()
+            return None
+
+        return _create_hierarchical_tree()
