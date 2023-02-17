@@ -19,11 +19,7 @@ def get_catalog_material_response(
     """
     material_url = f'{BASE_URL}/catalog/material{catalog_path}?code={material_code}'
     logging.info(f'{log_info} (from {material_url})')
-    try:
-        return get(material_url, headers=HEADERS)
-    except Exception as err:
-        logging.error(err.args)
-    return None
+    return get(material_url, headers=HEADERS)
 
 
 def get_material_response(material_code: str):
@@ -107,12 +103,6 @@ def get_specification_response(material_code: str):
 
 
 def create_material(material_response: Response, material_code: str):
-    """
-
-    @param material_response:
-    @param material_code:
-    @return: None or dict material
-    """
     try:
         material_json = material_response.json() \
             .get(MATERIAL_NAME)
@@ -165,15 +155,20 @@ ANALOGS_NAME = 'analogs'
 SPECIFICATION_NAME = 'specification'
 
 
-def get_material(material_code: str):
+class ErrorException():
+    pass
+
+
+def get_material_or_error(material_code: str):
     material_response = get_material_response(material_code)
     try:
         material_response.raise_for_status()
     except HTTPError as err:
-        message = material_response.json().get("message")
-        print(f'Ошибка по коду \'{material_code}\': code={material_response.status_code} {message}')
+        error_message = material_response.json().get("message")
+        error = f'Ошибка по коду \'{material_code}\': ' \
+                f'({material_response.status_code}) - {error_message}'
         logging.error(err)
-        return  # return if bad status_cod
+        return error
     return create_material(material_response, material_code)
 
 
@@ -222,13 +217,12 @@ class DkcObj:
     def get_materials(self, material_codes: List[str]):
         result = []
         for material_code in material_codes:
-            material = get_material(material_code)
-            if material:
-                print(f'Запрос по товару - \'{material_code}\' получен.')
-                result.append(material)
+            material_or_error = get_material_or_error(material_code)
+            if isinstance(material_or_error, dict):
+                print(f'Материал с кодом \'{material_code}\' получен.')
+                result.append(material_or_error)
             else:
-                message = f'Материал с кодом \'{material_code}\' не найден.'
-                print(message)
-                logging.info(message)
+                print(material_or_error)
+                logging.info(material_or_error)
         logging.info(f'-' * 100)
         return result
