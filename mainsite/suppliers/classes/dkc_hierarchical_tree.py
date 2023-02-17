@@ -1,5 +1,6 @@
 from .hierarchical_tree import BaseHierarchicalTree
 from .node import Node
+from .func_node import FuncNode
 
 
 class DkcHierarchicalTreeParameters(BaseHierarchicalTree):
