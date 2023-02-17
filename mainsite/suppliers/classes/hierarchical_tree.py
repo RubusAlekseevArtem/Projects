@@ -2,8 +2,9 @@ from .node import Node
 
 
 class BaseHierarchicalTree:
-    def __init__(self, root_node: Node = None):
+    def __init__(self, root_node: Node = None, obj=None):
         self.root = root_node
+        self.obj = obj
 
     def __str__(self):
         return f'{self.root}'

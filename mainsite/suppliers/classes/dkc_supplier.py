@@ -24,7 +24,7 @@ class DKCSupplier(BaseSupplier):
         return f'DKCSupplier({super().__str__()})'
 
     def get_tree_view_parameters(self) -> BaseHierarchicalTree:
-        dkc_hierarchical_tree_parameters = DkcHierarchicalTreeParameters()
+        dkc_hierarchical_tree_parameters = DkcHierarchicalTreeParameters(None)
         hierarchical_tree = dkc_hierarchical_tree_parameters.create_hierarchical_tree_parameters()
         return hierarchical_tree
 

@@ -202,8 +202,6 @@ class DkcObj:
             if 'AccessToken' in HEADERS:  # delete if token exists
                 del HEADERS['AccessToken']
             response = get(self.AUTH_URL, headers=HEADERS)
-            if self.base_encoding.lower() != response.encoding.lower():
-                self.base_encoding = response.encoding
             print(f'access_token status_code={response.status_code}')
             try:
                 response.raise_for_status()
