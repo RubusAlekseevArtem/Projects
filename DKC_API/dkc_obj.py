@@ -190,7 +190,10 @@ class DkcObj:
         else:
             logging.error(DkcAccessTokenError.__doc__)
             raise DkcAccessTokenError()
-        logging.basicConfig(filename="dkc.log", level=logging.INFO)
+        self.root_logger = logging.getLogger()
+        self.root_logger.setLevel(logging.INFO)
+        handler = logging.FileHandler('dkc.log', 'w', self.base_encoding)
+        self.root_logger.addHandler(handler)
 
     def __get_access_token(self):
         result = None

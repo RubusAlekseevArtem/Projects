@@ -99,14 +99,17 @@ def response_by_query_name(request, query_name):
                     buf.seek(0)
                     t2 = datetime.now()
                     processing_time = t2 - t1
-                    print(f'Processing time = {processing_time}')
                     average_processing_time = processing_time / len(material_records)
+                    print(f'Transmitted material codes : {len(material_codes)}')
+                    print(f'Materials received from the api : {len(material_records)}')
+                    print(f'Processing time = {processing_time}')
                     print(f'Average processing time = {average_processing_time}')
                     return FileResponse(buf, status=200, as_attachment=True)
                 else:
                     return create_error_json_response('Из списка материалов не удалось получить данные из API')
             return create_error_json_response(NO_SUPPLIER_ID_MESSAGE)
         return create_error_json_response(WAS_NOT_QUERY_NAME_MESSAGE)
+    return create_error_json_response(f'Не указан query_name')
 
 
 def index(request):
