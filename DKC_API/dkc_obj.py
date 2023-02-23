@@ -4,6 +4,18 @@ from typing import List
 from requests import HTTPError, get, JSONDecodeError, Response
 from DKC_API.private_file import HEADERS, BASE_URL, MASTER_KEY
 
+# !!! don't change !!!
+MATERIAL_NAME = 'material'
+CERTIFICATES_NAME = 'certificates'
+STOCK_NAME = 'stock'
+RELATED_NAME = 'related'
+ACCESSORIES_NAME = 'accessories'
+VIDEO_NAME = 'video'
+DRAWINGS_SKETCH_NAME = 'drawings_sketch'
+DESCRIPTION_NAME = 'description'
+ANALOGS_NAME = 'analogs'
+SPECIFICATION_NAME = 'specification'
+
 
 def get_catalog_material_response(
         material_code: str,
@@ -33,40 +45,40 @@ def get_material_response(material_code: str):
 def get_certificates_response(material_code: str):
     return get_catalog_material_response(
         material_code,
-        '/certificates',
-        'Get material certificates'
+        f'/{CERTIFICATES_NAME}',
+        f'Get material {CERTIFICATES_NAME}'
     )
 
 
 def get_videos_response(material_code: str):
     return get_catalog_material_response(
         material_code,
-        '/video',
-        'Get material video'
+        f'/{VIDEO_NAME}',
+        f'Get material {VIDEO_NAME}'
     )
 
 
 def get_stock_response(material_code: str):
     return get_catalog_material_response(
         material_code,
-        '/stock',
-        'Get material stock'
+        f'/{STOCK_NAME}',
+        f'Get material {STOCK_NAME}'
     )
 
 
 def get_related_response(material_code: str):
     return get_catalog_material_response(
         material_code,
-        '/related',
-        'Get material related'
+        f'/{RELATED_NAME}',
+        f'Get material {RELATED_NAME}'
     )
 
 
 def get_accessories_response(material_code: str):
     return get_catalog_material_response(
         material_code,
-        '/accessories',
-        'Get material accessories'
+        f'/{ACCESSORIES_NAME}',
+        f'Get material {ACCESSORIES_NAME}'
     )
 
 
@@ -81,24 +93,24 @@ def get_drawings_sketch_response(material_code: str):
 def get_description_response(material_code: str):
     return get_catalog_material_response(
         material_code,
-        '/description',
-        'Get material description'
+        f'/{DESCRIPTION_NAME}',
+        f'Get material {DESCRIPTION_NAME}'
     )
 
 
 def get_analogs_response(material_code: str):
     return get_catalog_material_response(
         material_code,
-        '/analogs',
-        'Get material analogs'
+        f'/{ANALOGS_NAME}',
+        f'Get material {ANALOGS_NAME}'
     )
 
 
 def get_specification_response(material_code: str):
     return get_catalog_material_response(
         material_code,
-        '/specification',
-        'Get material specification'
+        f'/{SPECIFICATION_NAME}',
+        f'Get material {SPECIFICATION_NAME}'
     )
 
 
@@ -140,23 +152,6 @@ def create_material(material_response: Response, material_code: str):
     except AttributeError as err:
         print(f'Нет ответа по коду - \'{material_code}\'')
         logging.error(err)
-
-
-# !!! don't change !!!
-MATERIAL_NAME = 'material'
-CERTIFICATES_NAME = 'certificates'
-STOCK_NAME = 'stock'
-RELATED_NAME = 'related'
-ACCESSORIES_NAME = 'accessories'
-VIDEO_NAME = 'video'
-DRAWINGS_SKETCH_NAME = 'drawings_sketch'
-DESCRIPTION_NAME = 'description'
-ANALOGS_NAME = 'analogs'
-SPECIFICATION_NAME = 'specification'
-
-
-class ErrorException():
-    pass
 
 
 def get_material_or_error(material_code: str):
