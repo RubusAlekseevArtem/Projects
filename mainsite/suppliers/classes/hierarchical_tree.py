@@ -13,10 +13,10 @@ class BaseHierarchicalTree:
         return f'{self.__class__.__name__}({self.__str__()})'
 
     def find_node_by_name(self, name: str):
-        return self.root.find_node_by_name(name)
+        return self.root.find_child_node_by_name(name)
 
     def find_node_by_number(self, number: str):
-        return self.root.find_node_by_number(number)
+        return self.root.find_child_node_by_number(number)
 
     def create_hierarchical_tree_parameters(self):
         """
