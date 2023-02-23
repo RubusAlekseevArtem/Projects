@@ -11,8 +11,7 @@ class NodeTests(TestCase):
     #     pass
 
     def test_node(self):
-        main_node = Node('root', 'Материал DKC')
-        main_node.add_children([
+        main_node = Node('root', 'Материал DKC').add_children([
             Node('general_params', 'Материал'),
             Node('material_certificates', 'Сертификаты материала'),
             Node('stock', 'Остатки на складах'),

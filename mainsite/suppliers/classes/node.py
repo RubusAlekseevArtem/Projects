@@ -45,10 +45,12 @@ class Node:
         if not isinstance(node, Node):
             raise NodeCreationError()
         self.children.append(node)
+        return self
 
     def add_children(self, nodes: Iterable):
         for node in nodes:
             self.add_child(node)
+        return self
 
     def create_hierarchical_tree(self):
         def _create_node(node: Node):
