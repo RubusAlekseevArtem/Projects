@@ -26,6 +26,15 @@ class Node:
     def __repr__(self):
         return f'Node({self.__str__()})'
 
+    def __eq__(self, other):
+        if isinstance(other, Node):
+            return \
+                    self.parent == other.parent and \
+                    self.number == other.number and \
+                    self.name == other.name and \
+                    self.children == other.children
+        return False
+
     def has_parent(self) -> bool:
         return self.parent is not None
 
