@@ -1,10 +1,13 @@
-from node import Node
 from typing import Callable
+
+from .node import Node
 
 
 class FuncNode(Node):
-    def __init__(self, number: str, name: str, fun: Callable[[], dict], children=None):
-        super().__init__(number, name, children)
+    def __init__(self, number: str, name: str, fun: Callable[[], dict], parent=None):
+        super().__init__(number, name, parent)
+        # if not isinstance(fun(), dict):
+        #     raise Exception('Function must be return dict')
         self.fun = fun
 
     def __str__(self):
@@ -13,35 +16,8 @@ class FuncNode(Node):
     def __repr__(self):
         return f'FuncNode({self.__str__()})'
 
-
-if __name__ == '__main__':
-    def f_get_data():
-        data = {}
-        return data
-
-
-    def f_get_data_2():
-        data = {}
-        return data
-
-
-    def f_get_data_3():
-        data = {}
-        return data
-
-
-    func_node = FuncNode(
-        'id', 'test_func_name',
-        f_get_data,
-        [
-            FuncNode(
-                'id_2', 'test_func_name_2',
-                f_get_data_2
-            ),
-            FuncNode(
-                'id_3', 'test_func_name_3',
-                f_get_data_3
-            ),
-        ]
-    )
-    print(func_node)
+    def __eq__(self, other):
+        if isinstance(other, FuncNode):
+            return super().__eq__(Node(self.number, self.name, self.parent)) and \
+                self.fun == other.fun
+        return False
