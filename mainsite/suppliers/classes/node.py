@@ -1,5 +1,11 @@
-import pprint
-from typing import List
+from typing import List, Iterable
+
+
+class NodeCreationError(Exception):
+    """Node creation error"""
+
+    def __init__(self):
+        super().__init__(self.__doc__)
 
 
 class Node:
@@ -7,12 +13,11 @@ class Node:
     NAME_KEY = 'Name'
     CHILDREN_KEY = 'Children'
 
-    def __init__(self, number: str, name: str, children=None):
-        if children is None:
-            children = []
+    def __init__(self, number: str, name: str, parent=None):
+        self.parent: Node = parent
         self.number = number
         self.name = name
-        self.children: List[Node] = children
+        self.children: List[Node] = []
         # add unique number
 
     def __str__(self):
@@ -21,8 +26,20 @@ class Node:
     def __repr__(self):
         return f'Node({self.__str__()})'
 
-    def has_children(self):
+    def has_parent(self) -> bool:
+        return self.parent is not None
+
+    def has_children(self) -> bool:
         return len(self.children) > 0
+
+    def add_child(self, node):
+        if not isinstance(node, Node):
+            raise NodeCreationError()
+        self.children.append(node)
+
+    def add_children(self, nodes: Iterable):
+        for node in nodes:
+            self.add_child(node)
 
     def create_hierarchical_tree(self):
         def _create_node(node: Node):
@@ -71,15 +88,3 @@ class Node:
             return None
 
         return _find_child_node_by_name(self, name)
-
-
-if __name__ == '__main__':
-    main_node = Node(
-        'root', 'Материал DKC',
-        [
-            Node('general_params', 'Материал'),
-            Node('material_certificates', 'Сертификаты материала'),
-            Node('stock', 'Остатки на складах'),
-        ]
-    )
-    pprint.pprint(main_node.create_hierarchical_tree(), indent=4, sort_dicts=False)
