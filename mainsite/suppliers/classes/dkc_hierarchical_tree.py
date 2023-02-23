@@ -4,15 +4,18 @@ from .func_node import FuncNode
 
 
 class DkcHierarchicalTreeParameters(BaseHierarchicalTree):
-    def __init__(self, obj):
-        root_node = Node(
-            'dkc_material', 'Материал DKC',
+    def dkc_material(self):
+        return self.obj
+
+    def general_material_parameter(self):
+        return self.dkc_material().get('general_material_parameter')
+
+    def __init__(self, obj: dict):
+        root_node = Node('dkc_material', 'Материал DKC').add_children(
             [
-                Node(
-                    'general_material_parameter', 'Общие параметры материала',
+                Node('general_material_parameter', 'Общие параметры материала').add_children(
                     [
-                        Node(
-                            'info', 'Информация по материалу',
+                        Node('info', 'Информация по материалу').add_children(
                             [
                                 Node(
                                     'id', 'id',
@@ -61,8 +64,7 @@ class DkcHierarchicalTreeParameters(BaseHierarchicalTree):
                                 ),
                             ],
                         ),
-                        Node(
-                            'photo', 'Фото материала',
+                        Node('photo', 'Фото материала').add_children(
                             [
                                 Node(
                                     'thumbnail_url', 'Миниатюра',
@@ -95,12 +97,11 @@ class DkcHierarchicalTreeParameters(BaseHierarchicalTree):
                         ),
                     ]
                 ),
-                Node('certificates', 'Сертификаты материала'),
+                Node('certificates', 'Сертификаты материала', ),
                 Node('stock', 'Остатки на складах'),
                 Node('related', 'Сопутствующие материалы'),
                 Node('accessories', 'Аксессуары материала'),
-                Node(
-                    'videos', 'Видео',
+                Node('videos', 'Видео').add_children(
                     [
                         Node('url', 'Ссылка'),
                         Node('cover', 'Обложка'),
