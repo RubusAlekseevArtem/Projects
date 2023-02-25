@@ -9,10 +9,15 @@ class NodeCreationError(Exception):
 
 
 class UniqueNodeCreationError(Exception):
-    """Error creating a unique node"""
+    """Error creating a unique node number"""
 
-    def __init__(self):
-        super().__init__(self.__doc__)
+    def __init__(self, repeated, list_numbers):
+        """
+
+        @param repeated:repeated element
+        @param list_numbers: list numbers
+        """
+        super().__init__(f'Error creating a unique node number\n{repeated} in {list_numbers}')
 
 
 class Node:
@@ -62,7 +67,7 @@ class Node:
                 if node.has_children():
                     _get_parents_numbers(node.children, result_list)
                 if node.number in result_list and unique_number:
-                    raise UniqueNodeCreationError()  # tree should not have duplicate numbers
+                    raise UniqueNodeCreationError(node.number, result_list)  # tree should not have duplicate numbers
                 result_list.append(node.number)
 
         if self.has_children():

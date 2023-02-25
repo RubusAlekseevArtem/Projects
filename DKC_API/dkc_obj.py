@@ -9,7 +9,6 @@ MATERIAL_NAME = 'material'
 CERTIFICATES_NAME = 'certificates'
 STOCK_NAME = 'stock'
 RELATED_NAME = 'related'
-# ACCESSORIES_NAME = 'accessories'
 VIDEO_NAME = 'video'
 DRAWINGS_SKETCH_NAME = 'drawings_sketch'
 DESCRIPTION_NAME = 'description'
@@ -74,14 +73,6 @@ def get_related_response(material_code: str):
     )
 
 
-# def get_accessories_response(material_code: str):
-#     return get_catalog_material_response(
-#         material_code,
-#         f'/{ACCESSORIES_NAME}',
-#         f'Get material {ACCESSORIES_NAME}'
-#     )
-
-
 def get_drawings_sketch_response(material_code: str):
     return get_catalog_material_response(
         material_code,
@@ -122,8 +113,6 @@ def create_material(material_response: Response, material_code: str):
         material_stock_json = get_stock_response(material_code).json()
         material_related_json = get_related_response(material_code).json() \
             .get(RELATED_NAME).get(material_code)
-        # material_accessories_json = get_accessories_response(material_code).json() \
-        #     .get(ACCESSORIES_NAME).get(material_code)
         material_videos_json = get_videos_response(material_code).json() \
             .get(VIDEO_NAME).get(material_code)
         material_drawings_sketch_json = get_drawings_sketch_response(material_code).json() \
@@ -139,7 +128,6 @@ def create_material(material_response: Response, material_code: str):
             CERTIFICATES_NAME: material_certificates_json,
             STOCK_NAME: material_stock_json,
             RELATED_NAME: material_related_json,
-            # ACCESSORIES_NAME: material_accessories_json,
             VIDEO_NAME: material_videos_json,
             DRAWINGS_SKETCH_NAME: material_drawings_sketch_json,
             DESCRIPTION_NAME: material_description_json,

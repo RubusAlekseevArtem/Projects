@@ -5,7 +5,7 @@ from .models import Supplier, SupplierParameter
 class SupplierModelTests(TestCase):
     name = 'name'
     is_outdated = False
-    test_supplier: Supplier = None
+    test_supplier: Supplier
 
     def setUp(self) -> None:
         self.test_supplier = Supplier.objects.create(name=self.name,

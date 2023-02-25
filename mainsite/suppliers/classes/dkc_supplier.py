@@ -24,9 +24,7 @@ class DKCSupplier(BaseSupplier):
         return f'DKCSupplier({super().__str__()})'
 
     def get_tree_view_parameters(self) -> BaseHierarchicalTree:
-        dkc_hierarchical_tree_parameters = DkcHierarchicalTreeParameters(None)
-        hierarchical_tree = dkc_hierarchical_tree_parameters.create_hierarchical_tree_parameters()
-        return hierarchical_tree
+        return DkcHierarchicalTreeParameters().create_hierarchical_tree_parameters()
 
     def get_data_from_api_with_parameters(self, params: dict):
         """
@@ -44,11 +42,3 @@ class DKCSupplier(BaseSupplier):
                 logging.error(err)
             return get_materials(material_codes, dkc)
         return None
-
-    def get_supplier_parameters_from_api(self) -> tuple:
-        material_codes = ['4400003']
-        materials = get_materials(material_codes)
-        for material in materials:
-            keys = tuple(material.__dict__.keys())
-        # print(keys)
-        return keys

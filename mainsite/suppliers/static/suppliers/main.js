@@ -73,15 +73,15 @@ function downloadOnClick() {
     console.log(material_codes);
 
     const supplier_id = $("#suppliers_select").find(":selected").val();
-    const selected_tree_ids = $(".tree").simpleTreePicker("val");
+    const tree_numbers = $(".tree").simpleTreePicker("val");
     const is_suppliers_selected = $("#suppliers_select").val();
     //   console.log(is_suppliers_selected);
 
     if (is_suppliers_selected == null) {
       alert("Выберите поставщика.");
     } else {
-      console.log(selected_tree_ids);
-      if (selected_tree_ids.length == 0) {
+      console.log(tree_numbers);
+      if (tree_numbers.length == 0) {
         alert("Выберите параметры.");
       } else {
         $.ajax({
@@ -90,7 +90,7 @@ function downloadOnClick() {
           data: {
             supplier_id: supplier_id,
             material_codes: material_codes,
-            selected_tree_ids: selected_tree_ids,
+            tree_numbers: tree_numbers,
           },
           timeout: TIMEOUT,
         })
