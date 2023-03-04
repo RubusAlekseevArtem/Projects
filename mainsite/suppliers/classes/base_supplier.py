@@ -38,3 +38,8 @@ class BaseSupplier(ABC):
         @rtype: параматры поставщика
         """
         pass
+
+    @abstractmethod
+    def get_hierarchical_tree(self) -> BaseHierarchicalTree:
+        pass
+

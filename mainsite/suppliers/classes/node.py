@@ -1,3 +1,4 @@
+import logging
 from typing import List, Iterable
 
 
@@ -46,7 +47,7 @@ class Node:
     def has_children(self) -> bool:
         return len(self.children) > 0
 
-    def _add_child(self, node):
+    def add_child(self, node):
         if not isinstance(node, Node):
             raise NodeCreationError()
         self.children.append(node)
@@ -54,7 +55,7 @@ class Node:
 
     def add_children(self, nodes: Iterable, check_unique_numbers=True):
         for node in nodes:
-            self._add_child(node)
+            self.add_child(node)
         if check_unique_numbers:
             self.check_parents_numbers()
         return self
@@ -121,14 +122,3 @@ class Node:
             return None
 
         return _find_child_node_by_name(self, name)
-
-
-if __name__ == '__main__':
-    main_node = Node('root', 'Материал DKC').add_children([
-        Node('general_params', 'Материал').add_children([
-            Node('general_params', 'Сертификат__')
-        ]),
-        Node('material_certificates', 'Сертификаты материала'),
-        Node('stock', 'Остатки на складах'),
-    ])
-    print(main_node)

@@ -81,7 +81,7 @@ def response_by_query_name(request, query_name):
                     data = supplier_provider.get_filter_data_by_tree_names(supplier_id, material_records, tree_numbers)
 
                     if data:
-                        print(data)
+                        pprint.pprint(data)
 
                     json_data = json.dumps(material_records, indent=4, ensure_ascii=False)
                     json_bytes_data = json_data.encode('utf-8')  # to bytes

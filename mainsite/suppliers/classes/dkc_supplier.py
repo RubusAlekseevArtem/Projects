@@ -13,6 +13,7 @@ from DKC_API.main import get_materials, DkcObj, DkcAccessTokenError
 
 
 class DKCSupplier(BaseSupplier):
+
     def __init__(self, name: str = 'DKC API', pk=None):
         # trying to get id from db
         supplier = Supplier.objects.all().filter(name=name)
@@ -26,9 +27,13 @@ class DKCSupplier(BaseSupplier):
     def get_tree_view_parameters(self) -> BaseHierarchicalTree:
         return DkcHierarchicalTreeParameters().create_hierarchical_tree_parameters()
 
+    def get_hierarchical_tree(self) -> BaseHierarchicalTree:
+        return DkcHierarchicalTreeParameters()
+
     def get_data_from_api_with_parameters(self, params: dict):
         """
         Получение данных от DKC API
+        @param params:
         @param parameters:
         @return:
         """

@@ -2,9 +2,8 @@ from .node import Node
 
 
 class BaseHierarchicalTree:
-    def __init__(self, root_node: Node = None, obj=None):
+    def __init__(self, root_node: Node = None):
         self.root = root_node
-        self.obj = obj
 
     def __str__(self):
         return f'{self.root}'
@@ -27,6 +26,6 @@ class BaseHierarchicalTree:
         def _create_hierarchical_tree():
             if self.root:
                 return self.root.create_hierarchical_tree()
-            return None
+            return {}
 
         return _create_hierarchical_tree()
