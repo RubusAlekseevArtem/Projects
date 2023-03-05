@@ -1,7 +1,7 @@
 from itertools import islice
 
-from .func_node import FuncNode
-from .hierarchical_tree import BaseHierarchicalTree
+from ..nodes.func_node import FuncNode
+from .base_hierarchical_tree import BaseHierarchicalTree
 
 
 def get_dkc_material(obj: dict):
@@ -77,7 +77,7 @@ class DkcHierarchicalTreeParameters(BaseHierarchicalTree):
                                          lambda o: get_info(o).get('url')),
                                 FuncNode('price', 'Цена',
                                          lambda o: get_info(o).get('price')),
-                                FuncNode('no_price', 'Цены нет',
+                                FuncNode('no_price', 'Никакой цены?',
                                          lambda o: get_info(o).get('no_price')),
                                 FuncNode('barcode', 'Штрих-код',
                                          lambda o: get_info(o).get('barcode')),
@@ -86,7 +86,7 @@ class DkcHierarchicalTreeParameters(BaseHierarchicalTree):
                         FuncNode('photo', 'Фото материала', get_photo).add_children(
                             [
                                 FuncNode(
-                                    'thumbnail_url', 'Миниатюра',
+                                    'thumbnail_url', 'Миниатюра материала',
                                     lambda o: get_photo(o).get('thumbnail_url')),
                                 FuncNode(
                                     'additional_images',
@@ -102,7 +102,7 @@ class DkcHierarchicalTreeParameters(BaseHierarchicalTree):
                                  lambda o: get_general_material_parameter(o).get('packing')),
                         FuncNode('avg_delivery', 'Средняя доставка',
                                  lambda o: get_general_material_parameter(o).get('avg_delivery')),
-                        FuncNode('accessories', 'Аксессуары материала',
+                        FuncNode('accessories', 'Аксессуары',
                                  lambda o: get_general_material_parameter(o).get('accessories')),
                         FuncNode('accessories_codes', 'Коды аксессуаров',
                                  lambda o: get_general_material_parameter(o).get('accessories_codes')),
@@ -110,7 +110,7 @@ class DkcHierarchicalTreeParameters(BaseHierarchicalTree):
                                  lambda o: get_general_material_parameter(o).get('sale')),
                     ]
                 ),
-                FuncNode('certificates', 'Сертификаты материала',
+                FuncNode('certificates', 'Сертификаты',
                          lambda o: get_dkc_material(o).get('certificates')),
                 FuncNode('stock', 'Остатки на складах',
                          lambda o: get_dkc_material(o).get('stock')),
@@ -120,9 +120,8 @@ class DkcHierarchicalTreeParameters(BaseHierarchicalTree):
                     [
                         FuncNode('url_to_the_video', 'Ссылка на видео',
                                  get_url_to_the_video),
-                        FuncNode('cover', 'Обложка', get_cover),
-                        FuncNode('link_type', 'Тип ссылки видео',
-                                 get_link_type),
+                        FuncNode('cover', 'Ссылка на обложку видео', get_cover),
+                        FuncNode('link_type', 'Тип ссылки видео', get_link_type),
                     ]
                 ),
                 FuncNode('drawings_sketch', 'Эскизы чертежей',

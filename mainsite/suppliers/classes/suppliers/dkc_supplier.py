@@ -3,9 +3,8 @@ import os.path
 import sys
 
 from .base_supplier import BaseSupplier
-from .dkc_hierarchical_tree import DkcHierarchicalTreeParameters
-from .hierarchical_tree import BaseHierarchicalTree
-from ..models import Supplier
+from ..hierarchical_trees.dkc_hierarchical_tree import DkcHierarchicalTreeParameters
+from ...models import Supplier
 
 sys.path.append(os.path.abspath(rf'..'))
 
@@ -24,17 +23,13 @@ class DKCSupplier(BaseSupplier):
     def __str__(self):
         return f'DKCSupplier({super().__str__()})'
 
-    def get_tree_view_parameters(self) -> BaseHierarchicalTree:
-        return DkcHierarchicalTreeParameters().create_hierarchical_tree_parameters()
-
-    def get_hierarchical_tree(self) -> BaseHierarchicalTree:
+    def get_hierarchical_tree(self):
         return DkcHierarchicalTreeParameters()
 
     def get_data_from_api_with_parameters(self, params: dict):
         """
         Получение данных от DKC API
         @param params:
-        @param parameters:
         @return:
         """
         material_codes = params.get('material_codes')

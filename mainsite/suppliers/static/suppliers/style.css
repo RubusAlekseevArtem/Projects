@@ -86,7 +86,7 @@
 }
 
 .tree {
-    max-height: 150px;
-    max-width: 400px;
+    max-height: 230px;
+    max-width: 600px;
     overflow-y: scroll;
 }

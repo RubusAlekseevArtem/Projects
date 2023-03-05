@@ -2,9 +2,9 @@ import json
 
 from django.test import TestCase
 
-from .dkc_hierarchical_tree import DkcHierarchicalTreeParameters
-from .func_node import FuncNode
-from .node import Node
+from mainsite.suppliers.classes.hierarchical_trees.dkc_hierarchical_tree import DkcHierarchicalTreeParameters
+from mainsite.suppliers.classes.nodes.func_node import FuncNode
+from mainsite.suppliers.classes.nodes.node import Node
 
 
 class NodeTests(TestCase):

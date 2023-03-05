@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from .hierarchical_tree import BaseHierarchicalTree
+from ..hierarchical_trees.base_hierarchical_tree import BaseHierarchicalTree
 
 
 class BaseSupplier(ABC):

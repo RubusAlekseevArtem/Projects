@@ -1,7 +1,6 @@
 import io
 import json
 import os.path
-import pprint
 import sys
 from datetime import datetime
 
@@ -50,15 +49,14 @@ def response_by_query_name(request, query_name):
 
                 supplier_provider = SupplierProvider()
                 # supplier_provider.try_update_parameters_by_id(supplier_id) # долго!
-                tree_view_supplier_parameters = supplier_provider.get_tree_view_supplier_parameters(supplier_id)
+                tree_view_supplier_parameters = supplier_provider.get_hierarchical_tree_parameters(supplier_id)
 
                 # pprint.pprint(tree_view_supplier_parameters, indent=4, sort_dicts=False)
                 if tree_view_supplier_parameters:
                     json_tree_view_supplier_parameters = json.dumps(tree_view_supplier_parameters)
                     return create_json_response(
                         {'json_tree_view_supplier_parameters': json_tree_view_supplier_parameters})
-                else:
-                    return create_error_json_response('Нет доступных параметров')
+                return create_error_json_response('Нет доступных параметров поставщика')
             return create_error_json_response(NO_SUPPLIER_ID_MESSAGE)
         if is_query(request, query_name, 'get_materials_as_file'):
             if request.GET.get('supplier_id'):  # if have supplier_id
@@ -97,8 +95,7 @@ def response_by_query_name(request, query_name):
                         print(f'Average processing time = {average_processing_time}')
                         return FileResponse(buf, status=200, as_attachment=True)
                     return create_error_json_response('Не удалось достать данные из запрошенных данных')
-                else:
-                    return create_error_json_response('Из списка материалов не удалось получить данные из API')
+                return create_error_json_response('Из списка материалов не удалось получить данные из API')
             return create_error_json_response(NO_SUPPLIER_ID_MESSAGE)
         return create_error_json_response(WAS_NOT_QUERY_NAME_MESSAGE)
     return create_error_json_response(f'Не указан query_name')
