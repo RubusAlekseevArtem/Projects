@@ -60,15 +60,14 @@ class SupplierProvider:
             for material in material_records:
                 result_obj = {}
                 for name in tree_names:
-                    print(f'current name= {name}')
                     find_node = supplier_parameter_tree.root.find_child_node_by_number(name)
                     try:
-                        # print(f'{find_node.have_function=}')
                         if find_node.have_function:
                             res = find_node.function(material)
-                            print(f'result: {res}')
                             result_obj[name] = res
                     except AttributeError as err:
-                        logging.error(f'(name={name}){find_node} не имеет функции ({err})')
+                        message = f'(name={name}){find_node} не имеет функции ({err})'
+                        print(message)
+                        logging.error(message)
                 result.append(result_obj)
             return result

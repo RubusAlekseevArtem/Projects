@@ -77,27 +77,26 @@ def response_by_query_name(request, query_name):
                 material_records = supplier_provider.get_data_with_parameters(supplier_id, params)
 
                 if material_records:
-
                     data = supplier_provider.get_filter_data_by_tree_names(supplier_id, material_records, tree_numbers)
 
                     if data:
-                        pprint.pprint(data)
-
-                    json_data = json.dumps(material_records, indent=4, ensure_ascii=False)
-                    json_bytes_data = json_data.encode('utf-8')  # to bytes
-                    buf = io.BytesIO()
-                    buf.write(json_bytes_data)
-                    # if you pass a file-like object like io.BytesIO, it’s your task to seek()
-                    # it before passing it to FileResponse.
-                    buf.seek(0)
-                    t2 = datetime.now()
-                    processing_time = t2 - t1
-                    average_processing_time = processing_time / len(material_records)
-                    print(f'Transmitted material codes : {len(material_codes)}')
-                    print(f'Materials received from the api : {len(material_records)}')
-                    print(f'Processing time = {processing_time}')
-                    print(f'Average processing time = {average_processing_time}')
-                    return FileResponse(buf, status=200, as_attachment=True)
+                        # pprint.pprint(data)
+                        json_data = json.dumps(data, indent=4, ensure_ascii=False)
+                        json_bytes_data = json_data.encode('utf-8')  # to bytes
+                        buf = io.BytesIO()
+                        buf.write(json_bytes_data)
+                        # if you pass a file-like object like io.BytesIO, it’s your task to seek()
+                        # it before passing it to FileResponse.
+                        buf.seek(0)
+                        t2 = datetime.now()
+                        processing_time = t2 - t1
+                        average_processing_time = processing_time / len(material_records)
+                        print(f'Transmitted material codes : {len(material_codes)}')
+                        print(f'Materials received from the api : {len(material_records)}')
+                        print(f'Processing time = {processing_time}')
+                        print(f'Average processing time = {average_processing_time}')
+                        return FileResponse(buf, status=200, as_attachment=True)
+                    return create_error_json_response('Не удалось достать данные из запрошенных данных')
                 else:
                     return create_error_json_response('Из списка материалов не удалось получить данные из API')
             return create_error_json_response(NO_SUPPLIER_ID_MESSAGE)

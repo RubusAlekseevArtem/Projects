@@ -1,4 +1,3 @@
-from .func_node import FuncNode
 from .node import Node
 
 
@@ -24,9 +23,6 @@ class BaseHierarchicalTree:
         @return:
         """
 
-        def _create_hierarchical_tree():
-            if self.root:
-                return self.root.create_hierarchical_tree()
-            return {}
-
-        return _create_hierarchical_tree()
+        if self.root:
+            return self.root.create_hierarchical_tree()
+        return {}

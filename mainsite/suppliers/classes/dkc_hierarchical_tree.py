@@ -28,6 +28,18 @@ def get_video(obj: dict):
     return get_dkc_material(obj).get('video')
 
 
+def get_url_to_the_video(obj: dict):
+    return list(map(lambda i: i.get('url'), get_video(obj)))
+
+
+def get_cover(obj: dict):
+    return list(map(lambda i: i.get('cover'), get_video(obj)))
+
+
+def get_link_type(obj: dict):
+    return list(map(lambda i: i.get('type'), get_video(obj)))
+
+
 class DkcHierarchicalTreeParameters(BaseHierarchicalTree):
     def __init__(self):
         root_node = FuncNode('dkc_material', 'Материал DKC', get_dkc_material).add_children(
@@ -106,12 +118,11 @@ class DkcHierarchicalTreeParameters(BaseHierarchicalTree):
                          lambda o: get_dkc_material(o).get('related')),
                 FuncNode('video', 'Видео', get_video).add_children(
                     [
-                        FuncNode('url_to_the_video', 'Ссылка',
-                                 lambda o: get_video(o).get('url')),
-                        FuncNode('cover', 'Обложка',
-                                 lambda o: get_video(o).get('cover')),
-                        FuncNode('link_type', 'Тип ссылки',
-                                 lambda o: get_video(o).get('type')),
+                        FuncNode('url_to_the_video', 'Ссылка на видео',
+                                 get_url_to_the_video),
+                        FuncNode('cover', 'Обложка', get_cover),
+                        FuncNode('link_type', 'Тип ссылки видео',
+                                 get_link_type),
                     ]
                 ),
                 FuncNode('drawings_sketch', 'Эскизы чертежей',
