@@ -5,7 +5,7 @@ from .hierarchical_tree import BaseHierarchicalTree
 
 class BaseSupplier(ABC):
     """
-    BaseSupplier - абстарктный класс для создания поставщиков
+    BaseSupplier - абстарктный класс поставщика
     """
 
     @abstractmethod
@@ -21,25 +21,20 @@ class BaseSupplier(ABC):
         return f'{self.pk}, {self.name}'
 
     def __repr__(self):
-        return str(self)
+        return self.__str__()
 
     @abstractmethod
-    def get_data_from_api_with_parameters(self, parameters: dict):
+    def get_data_from_api_with_parameters(self, params: dict):
         """
         Получить данные из api с параметрами
-        @param parameters: парметры
-        """
-        pass
-
-    @abstractmethod
-    def get_tree_view_parameters(self) -> BaseHierarchicalTree:
-        """
-        Получить иерархические параметры
-        @rtype: параматры поставщика
+        @param params:
         """
         pass
 
     @abstractmethod
     def get_hierarchical_tree(self) -> BaseHierarchicalTree:
+        """
+        Получить иерархическое дерево прараметров поставщика
+        @return:
+        """
         pass
-
