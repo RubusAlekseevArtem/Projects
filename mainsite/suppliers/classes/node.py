@@ -87,38 +87,28 @@ class Node:
 
     def find_child_node_by_number(self, number: str):
         def _find_child_node_by_number(node: Node, number_: str):
-            def __find_child_node_by_number(children: List[Node], number__: str):
-                for child in children:
-                    if child.number == number__:
-                        return child
-                    elif child.has_children():
-                        return __find_child_node_by_number(child.children, number__)
-                return None
-
             if node:
                 if node.number == number_:
                     return node
                 elif node.has_children():
-                    return __find_child_node_by_number(node.children, number_)
+                    for child in node.children:
+                        find_node = _find_child_node_by_number(child, number_)
+                        if find_node:
+                            return find_node
             return None
 
         return _find_child_node_by_number(self, number)
 
     def find_child_node_by_name(self, name: str):
         def _find_child_node_by_name(node: Node, name_: str):
-            def __find_child_node_by_name(children: List[Node], name__: str):
-                for child in children:
-                    if child.name == name__:
-                        return child
-                    elif child.has_children():
-                        return __find_child_node_by_name(child.children, name__)
-                return None
-
             if node:
                 if node.name == name_:
                     return node
                 elif node.has_children():
-                    return __find_child_node_by_name(node.children, name_)
+                    for child in node.children:
+                        find_node = _find_child_node_by_name(child, name_)
+                        if find_node:
+                            return find_node
             return None
 
         return _find_child_node_by_name(self, name)

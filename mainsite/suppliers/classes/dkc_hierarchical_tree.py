@@ -125,38 +125,3 @@ class DkcHierarchicalTreeParameters(BaseHierarchicalTree):
             ]
         )
         super().__init__(root_node)
-
-# class AbstractMaterialParser(ABC):
-#
-#     def parse_object(self, json_obj) -> Node:
-#         parent = Node('', '')
-#         parent0 = parent
-#         for node in json_obj:
-#             new_node = self._parse_object0(node, parent, parent0)
-#             if new_node != parent0:
-#                 parent.add_child(new_node)
-#                 parent = new_node
-#         return parent
-#
-#     @abstractmethod
-#     def _parse_object0(self, json_obj: dict, parent: Node, node: Node):
-#         pass
-#
-#
-# class MaterialParser(AbstractMaterialParser):
-#     def _parse_object0(self, json_obj: dict, parent: Node, node: Node):
-#         match json_obj:
-#             case 'material':
-#                 return json_obj.get('material')
-#             case _:
-#                 print(json_obj)
-#         return node
-#
-#
-# if __name__ == '__main__':
-#     mp = MaterialParser()
-#     with open(r"C:\Users\alekseev_a_practik\Downloads\data (6).txt", encoding='utf-8') as file:
-#         json_objects = json.load(file)
-#         # pprint.pprint(json_obj)
-#         parsed_object = mp.parse_object(json_objects)
-#         pprint.pprint(parsed_object)

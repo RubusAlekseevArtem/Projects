@@ -1,3 +1,4 @@
+from .func_node import FuncNode
 from .node import Node
 
 
