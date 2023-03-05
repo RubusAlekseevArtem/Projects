@@ -1,10 +1,10 @@
-import json
+from json import loads
 
 from django.test import TestCase
 
-from mainsite.suppliers.classes.hierarchical_trees.dkc_hierarchical_tree import DkcHierarchicalTreeParameters
-from mainsite.suppliers.classes.nodes.func_node import FuncNode
-from mainsite.suppliers.classes.nodes.node import Node
+from hierarchical_trees.dkc_hierarchical_tree import DkcHierarchicalTreeParameters
+from nodes.func_node import FuncNode
+from nodes.node import Node
 
 
 class NodeTests(TestCase):
@@ -64,6 +64,10 @@ class FuncNodeTests(TestCase):
                 ),
             ]
         )
+        self.assertEqual(
+            FuncNode('id_2', 'test_func_name_2', self.b),
+            FuncNode('456789', 'sadewf', self.c)
+        )
 
         self.assertEqual(func_node.number, 'id')
         self.assertEqual(func_node.name, 'test_func_name')
@@ -90,7 +94,7 @@ class FuncNodeTests(TestCase):
 
 class DkcHierarchicalTreeParametersTests(TestCase):
     def setUp(self) -> None:
-        self.json = json.loads(r"""
+        self.json = loads(r"""
     {
         "material": {
             "id": 41542,

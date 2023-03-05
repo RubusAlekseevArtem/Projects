@@ -1,7 +1,7 @@
 from itertools import islice
 
-from ..nodes.func_node import FuncNode
-from .base_hierarchical_tree import BaseHierarchicalTree
+from mainsite.suppliers.classes.hierarchical_trees.base_hierarchical_tree import BaseHierarchicalTree
+from mainsite.suppliers.classes.nodes.func_node import FuncNode
 
 
 def get_dkc_material(obj: dict):

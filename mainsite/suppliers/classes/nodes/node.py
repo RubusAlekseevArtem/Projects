@@ -1,4 +1,3 @@
-import logging
 from typing import List, Iterable
 
 
@@ -35,7 +34,7 @@ class Node:
         return f'{self.number} {self.name} {self.children}'
 
     def __repr__(self):
-        return f'Node({self.__str__()})'
+        return f'{self.__class__.__name__}({self.__str__()})'
 
     def __eq__(self, other):
         if isinstance(other, Node):
@@ -73,7 +72,6 @@ class Node:
 
         if self.has_children():
             _get_parents_numbers(self.children, [self.number])
-        return self
 
     def create_hierarchical_tree(self):
         def _create_node(node: Node):

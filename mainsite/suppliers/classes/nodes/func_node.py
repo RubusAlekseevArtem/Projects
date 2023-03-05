@@ -1,6 +1,6 @@
 from typing import Callable
 
-from .node import Node
+from mainsite.suppliers.classes.nodes.node import Node
 
 
 class FuncNode(Node):
@@ -11,14 +11,9 @@ class FuncNode(Node):
     def __str__(self):
         return f'{super().__str__()} f={self.function.__name__ if self.function else self.function}'
 
-    def __repr__(self):
-        return f'FNode({self.__str__()})'
-
     def __eq__(self, other):
         if isinstance(other, FuncNode):
-            return self.number == other.number and \
-                self.name == other.name and \
-                self.children == other.children and \
+            return super().__eq__(self) and \
                 self.function == other.function
         return False
 

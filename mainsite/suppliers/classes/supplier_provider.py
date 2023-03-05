@@ -1,8 +1,8 @@
 import logging
 from typing import List, Tuple
 
-from .suppliers.base_supplier import BaseSupplier
-from .suppliers.dkc_supplier import DKCSupplier
+from mainsite.suppliers.classes.suppliers.base_supplier import BaseSupplier
+from mainsite.suppliers.classes.suppliers.dkc_supplier import DKCSupplier
 
 
 class SupplierProvider:
@@ -51,7 +51,7 @@ class SupplierProvider:
             return supplier[0].get_hierarchical_tree().create_hierarchical_tree_parameters()
 
     def get_filter_data_by_tree_names(self, supplier_id: int,
-                                      material_records: List[dict],
+                                      materials: List[dict],
                                       tree_names: List[str]) -> List | None:
         if self.supplier_not_exists(supplier_id):
             return
@@ -59,7 +59,7 @@ class SupplierProvider:
         if supplier:
             result = []
             supplier_parameter_tree = supplier[0].get_hierarchical_tree()
-            for material in material_records:
+            for material in materials:
                 result_obj = {}
                 for name in tree_names:
                     find_node = supplier_parameter_tree.root.find_child_node_by_number(name)

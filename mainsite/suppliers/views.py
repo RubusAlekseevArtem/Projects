@@ -7,8 +7,8 @@ from datetime import datetime
 from django.http import JsonResponse, FileResponse
 from django.shortcuts import render
 
-from .classes.supplier_provider import SupplierProvider
-from .models import get_suppliers
+from mainsite.suppliers.classes.supplier_provider import SupplierProvider
+from mainsite.suppliers.models import get_suppliers
 
 sys.path.append(os.path.abspath(rf'..'))
 

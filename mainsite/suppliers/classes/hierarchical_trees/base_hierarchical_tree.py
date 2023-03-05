@@ -1,8 +1,8 @@
-from ..nodes.node import Node
+from mainsite.suppliers.classes.nodes.func_node import FuncNode
 
 
 class BaseHierarchicalTree:
-    def __init__(self, root_node: Node = None):
+    def __init__(self, root_node: FuncNode = None):
         self.root = root_node
 
     def __str__(self):

@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import index, response_by_query_name
+from mainsite.suppliers.views import index, response_by_query_name
 
 app_name = 'suppliers'
 

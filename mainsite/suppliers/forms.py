@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import MAX_LENGTH
+from mainsite.suppliers.models import MAX_LENGTH
 
 
 class ContactForm(forms.Form):
