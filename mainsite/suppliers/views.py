@@ -7,8 +7,8 @@ from datetime import datetime
 from django.http import JsonResponse, FileResponse
 from django.shortcuts import render
 
-from mainsite.suppliers.classes.supplier_provider import SupplierProvider
-from mainsite.suppliers.models import get_suppliers
+from .classes.supplier_provider import SupplierProvider
+from .models import get_suppliers
 
 sys.path.append(os.path.abspath(rf'..'))
 
@@ -48,7 +48,6 @@ def response_by_query_name(request, query_name):
                 supplier_id = int(request.GET.get('supplier_id'))
 
                 supplier_provider = SupplierProvider()
-                # supplier_provider.try_update_parameters_by_id(supplier_id) # долго!
                 tree_view_supplier_parameters = supplier_provider.get_hierarchical_tree_parameters(supplier_id)
 
                 # pprint.pprint(tree_view_supplier_parameters, indent=4, sort_dicts=False)

@@ -2,9 +2,9 @@ import logging
 import os.path
 import sys
 
-from mainsite.suppliers.classes.hierarchical_trees.dkc_hierarchical_tree import DkcHierarchicalTreeParameters
-from mainsite.suppliers.classes.suppliers.base_supplier import BaseSupplier
-from mainsite.suppliers.models import Supplier
+from ..hierarchical_trees.dkc_hierarchical_tree import DkcHierarchicalTreeParameters
+from ..suppliers.base_supplier import BaseSupplier
+from ...models import Supplier
 
 sys.path.append(os.path.abspath(rf'..'))
 

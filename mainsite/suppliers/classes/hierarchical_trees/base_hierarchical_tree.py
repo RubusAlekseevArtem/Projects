@@ -1,4 +1,4 @@
-from mainsite.suppliers.classes.nodes.func_node import FuncNode
+from ..nodes.func_node import FuncNode
 
 
 class BaseHierarchicalTree:

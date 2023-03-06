@@ -1,8 +1,8 @@
 import logging
 from typing import List, Tuple
 
-from mainsite.suppliers.classes.suppliers.base_supplier import BaseSupplier
-from mainsite.suppliers.classes.suppliers.dkc_supplier import DKCSupplier
+from .suppliers.base_supplier import BaseSupplier
+from .suppliers.dkc_supplier import DKCSupplier
 
 
 class SupplierProvider:

@@ -1,6 +1,6 @@
 from typing import Callable
 
-from mainsite.suppliers.classes.nodes.node import Node
+from ..nodes.node import Node
 
 
 class FuncNode(Node):
