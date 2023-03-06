@@ -188,9 +188,9 @@ function suppliersOnChanged() {
   })
     .done((response, status, jqXHR) => {
       $(".button_input").attr("disabled", false);
-      //   console.log(response.json_tree_view_supplier_parameters);
-      if (response.json_tree_view_supplier_parameters != undefined) {
-        const data = JSON.parse(response.json_tree_view_supplier_parameters);
+      //   console.log(response.json_supplier_tree_params);
+      if (response.json_supplier_tree_params != undefined) {
+        const data = JSON.parse(response.json_supplier_tree_params);
         setTreeData(data); // update dropdown menu options
       }
     })

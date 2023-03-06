@@ -1,6 +1,8 @@
+import unittest
+
 from django.test import TestCase
 
-from mainsite.suppliers.models import Supplier, SupplierParameter
+from .models import Supplier, SupplierParameter
 
 
 class SupplierModelTests(TestCase):
@@ -42,3 +44,7 @@ class SupplierParameterModelTests(TestCase):
                          f'{self.test_supplier_parameter.supplier.name} '
                          f'\'{self.test_supplier_parameter.parameter_name}\' '
                          f'({str(self.test_supplier_parameter.is_outdated)[0]})')
+
+
+if __name__ == '__main__':
+    unittest.main()

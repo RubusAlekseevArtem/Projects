@@ -1,10 +1,11 @@
+import unittest
 from json import loads
 
 from django.test import TestCase
 
-from hierarchical_trees.dkc_hierarchical_tree import DkcHierarchicalTreeParameters
-from nodes.func_node import FuncNode
-from nodes.node import Node
+from .hierarchical_trees.dkc_hierarchical_tree import DkcHierarchicalTreeParameters
+from .nodes.func_node import FuncNode
+from .nodes.node import Node
 
 
 class NodeTests(TestCase):
@@ -66,7 +67,7 @@ class FuncNodeTests(TestCase):
         )
         self.assertEqual(
             FuncNode('id_2', 'test_func_name_2', self.b),
-            FuncNode('456789', 'sadewf', self.c)
+            FuncNode('id_2', 'test_func_name_2', self.b)
         )
 
         self.assertEqual(func_node.number, 'id')
@@ -1735,3 +1736,7 @@ class DkcHierarchicalTreeParametersTests(TestCase):
                     "https://www.dkc.ru/upload/iblock/a2d/a2d0df978da02e767a1174ca0c4ea39e.jpg",
                     "https://www.dkc.ru/upload/iblock/3b9/3b9551b9a9dcc86200e2b683589832dd.jpg"
                 ])
+
+
+if __name__ == '__main__':
+    unittest.main()

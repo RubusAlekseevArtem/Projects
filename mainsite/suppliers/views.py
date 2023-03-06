@@ -48,13 +48,12 @@ def response_by_query_name(request, query_name):
                 supplier_id = int(request.GET.get('supplier_id'))
 
                 supplier_provider = SupplierProvider()
-                tree_view_supplier_parameters = supplier_provider.get_hierarchical_tree_parameters(supplier_id)
+                supplier_tree_params = supplier_provider.get_supplier_tree_params(supplier_id)
 
-                # pprint.pprint(tree_view_supplier_parameters, indent=4, sort_dicts=False)
-                if tree_view_supplier_parameters:
-                    json_tree_view_supplier_parameters = json.dumps(tree_view_supplier_parameters)
+                if supplier_tree_params:
+                    json_supplier_tree_params = json.dumps(supplier_tree_params)
                     return create_json_response(
-                        {'json_tree_view_supplier_parameters': json_tree_view_supplier_parameters})
+                        {'json_supplier_tree_params': json_supplier_tree_params})
                 return create_error_json_response('Нет доступных параметров поставщика')
             return create_error_json_response(NO_SUPPLIER_ID_MESSAGE)
         if is_query(request, query_name, 'get_materials_as_file'):
@@ -62,22 +61,22 @@ def response_by_query_name(request, query_name):
                 t1 = datetime.now()
                 supplier_id = int(request.GET.get('supplier_id'))
                 material_codes = request.GET.getlist('material_codes[]')
-                tree_numbers = request.GET.getlist('tree_numbers[]')
-
-                if tree_numbers:
-                    map(int, tree_numbers)  # convert to int
+                selected_tree_numbers = request.GET.getlist('tree_numbers[]')
 
                 params = {
                     'material_codes': material_codes
                 }
                 supplier_provider = SupplierProvider()
-                material_records = supplier_provider.get_data_with_parameters(supplier_id, params)
+                supplier_data = supplier_provider.get_supplier_data(supplier_id, params)
 
-                if material_records:
-                    data = supplier_provider.get_filter_data_by_tree_names(supplier_id, material_records, tree_numbers)
+                if supplier_data:
+                    data = supplier_provider.get_filter_data_by_tree_numbers(
+                        supplier_id,
+                        supplier_data,
+                        selected_tree_numbers
+                    )
 
                     if data:
-                        # pprint.pprint(data)
                         json_data = json.dumps(data, indent=4, ensure_ascii=False)
                         json_bytes_data = json_data.encode('utf-8')  # to bytes
                         buf = io.BytesIO()
@@ -87,13 +86,13 @@ def response_by_query_name(request, query_name):
                         buf.seek(0)
                         t2 = datetime.now()
                         processing_time = t2 - t1
-                        average_processing_time = processing_time / len(material_records)
+                        average_processing_time = processing_time / len(supplier_data)
                         print(f'Transmitted material codes : {len(material_codes)}')
-                        print(f'Materials received from the api : {len(material_records)}')
+                        print(f'Materials received from the api : {len(supplier_data)}')
                         print(f'Processing time = {processing_time}')
                         print(f'Average processing time = {average_processing_time}')
                         return FileResponse(buf, status=200, as_attachment=True)
-                    return create_error_json_response('Не удалось достать данные из запрошенных данных')
+                    return create_error_json_response('Не удалось достать выбранные данные из данных')
                 return create_error_json_response('Из списка материалов не удалось получить данные из API')
             return create_error_json_response(NO_SUPPLIER_ID_MESSAGE)
         return create_error_json_response(WAS_NOT_QUERY_NAME_MESSAGE)

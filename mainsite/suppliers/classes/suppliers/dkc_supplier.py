@@ -23,10 +23,10 @@ class DKCSupplier(BaseSupplier):
     def __str__(self):
         return f'DKCSupplier({super().__str__()})'
 
-    def get_hierarchical_tree(self):
+    def get_supplier_tree(self):
         return DkcHierarchicalTreeParameters()
 
-    def get_data_from_api_with_parameters(self, params: dict):
+    def get_supplier_data(self, params: dict):
         """
         Получение данных от DKC API
         @param params:
@@ -34,7 +34,7 @@ class DKCSupplier(BaseSupplier):
         """
         material_codes = params.get('material_codes')
         if material_codes:
-            dkc = None  # create dkc obj for all materials requests
+            dkc = None  # create dkc obj for all material requests
             try:
                 dkc = DkcObj()
             except DkcAccessTokenError as err:

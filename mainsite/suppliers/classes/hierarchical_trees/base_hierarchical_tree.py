@@ -3,7 +3,7 @@ from ..nodes.func_node import FuncNode
 
 class BaseHierarchicalTree:
     def __init__(self, root_node: FuncNode = None):
-        self.root = root_node
+        self.root: FuncNode = root_node
 
     def __str__(self):
         return f'{self.root}'

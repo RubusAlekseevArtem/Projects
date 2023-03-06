@@ -24,17 +24,17 @@ class BaseSupplier(ABC):
         return self.__str__()
 
     @abstractmethod
-    def get_data_from_api_with_parameters(self, params: dict):
+    def get_supplier_data(self, params: dict):
         """
-        Получить данные из api с параметрами
+        Получить данные поставщика с параметрами
         @param params:
         """
         pass
 
     @abstractmethod
-    def get_hierarchical_tree(self) -> BaseHierarchicalTree:
+    def get_supplier_tree(self) -> BaseHierarchicalTree:
         """
-        Получить иерархическое дерево прараметров поставщика
+        Получить иерархическое дерево поставщика
         @return:
         """
         pass
