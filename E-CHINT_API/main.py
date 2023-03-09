@@ -1,17 +1,20 @@
 import json
 import logging
+import pprint
 from datetime import datetime
 from json import JSONDecodeError
 
 import requests
-from requests import HTTPError, Response
+from requests import HTTPError
 
 from private_file import base_url, headers
 
 PRODUCTS_URL = f'{base_url}/api/products/'
 PRICES_URL = f'{base_url}/api/prices/'
+PRODUCT_GROUPS_URL = f'{base_url}/api/product_groups/'
+PRODUCT_PROPERTIES_URL = f'{base_url}/api/product_properties/'
 
-RESULT_FILE_NAME = 'chint.log'
+RESULT_FILE_NAME = 'load_data.txt'
 ENCODING = 'utf-8'
 
 # don't change!
@@ -22,17 +25,10 @@ ERROR_MESSAGE_KEY = 'error_message'
 LIMIT = 25  # available -> [0, 25, 50, 100]
 
 
-# Все запросы используют метод GET
+# class ProductGetValues(BaseGetValues):
+
 
 def get_product(vendor_code):
-    def get_json_or_none(response: Response):
-        try:
-            return response.json()
-        except JSONDecodeError as err:
-            print(err)
-            logging.error(err)
-        return None
-
     params = {
         'limit': LIMIT,
         'vendor_code': vendor_code,
@@ -47,17 +43,19 @@ def get_product(vendor_code):
     # print(json.dumps(dict(response.headers), indent=4)) # headers
     try:
         response.raise_for_status()
-        json_data = get_json_or_none(response)
-        if json_data:
-            request_is_success = json_data.get(SUCCESS_KEY)
+        try:
+            json_resp = response.json()
+            request_is_success = json_resp.get(SUCCESS_KEY)
             if request_is_success:
                 print(f"{vendor_code} - получен")
-                return json_data
+                return json_resp
             else:
-                error = json_data[ERROR_KEY]
+                error = json_resp[ERROR_KEY]
                 print(f"{vendor_code} - (error_code={error[ERROR_CODE_KEY]}) {error[ERROR_MESSAGE_KEY]}")
-        else:
+        except JSONDecodeError as err:
             print('Не удалось получить json из запроса')
+            print(err)
+            logging.error(err)
     except HTTPError:
         error = json.loads(response.text)[ERROR_KEY]
         print(f"error_code={error[ERROR_CODE_KEY]}")
@@ -65,17 +63,21 @@ def get_product(vendor_code):
     return None
 
 
-def get_products(vendor_codes, print_result_time=True):
+def get_products(vendor_codes):
+    def create_product(product_json_obj):
+        prod = product_json_obj.get('data').get('products')[0]
+        # pprint.pprint(product)
+        return prod
+
     result = []
     t1 = datetime.now()
     for vendor_code in vendor_codes:
         product = get_product(vendor_code)
         if product:
-            result.append(product)
+            result.append(create_product(product))
     t2 = datetime.now()
-    if print_result_time:
-        result_time = t2 - t1
-        print(f'result_time={result_time}')
+    result_time = t2 - t1
+    print(f'result_time={result_time}')
     return result
 
 
@@ -83,4 +85,90 @@ if __name__ == '__main__':
     print(PRODUCTS_URL)
     codes = [521527, 521525, 521367, 521111]
     products = get_products(codes)
-    print(len(products))
+    json_data = json.dumps(
+        products,
+        indent=4,
+        ensure_ascii=False)
+    with open(RESULT_FILE_NAME, 'w', encoding=ENCODING) as f:
+        f.writelines(json_data)
+
+    # # цены берутся целиком
+    # print(PRICES_URL)
+    # response = requests.get(PRICES_URL, headers=headers)
+    # try:
+    #     response.raise_for_status()
+    #     try:
+    #         json_resp = response.json()
+    #         request_is_success = json_resp.get(SUCCESS_KEY)
+    #         if request_is_success:
+    #             print(f'Получено: {json_resp.get("data").get("items_count")}')
+    #             prices = json_resp.get('data').get('prices')
+    #             json_data = json.dumps(
+    #                 prices,
+    #                 indent=4,
+    #                 ensure_ascii=False)
+    #             with open(RESULT_FILE_NAME, 'w', encoding=ENCODING) as f:
+    #                 f.writelines(json_data)
+    #         else:
+    #             error = json_resp[ERROR_KEY]
+    #             print(f"(error_code={error[ERROR_CODE_KEY]}) {error[ERROR_MESSAGE_KEY]}")
+    #     except JSONDecodeError as err:
+    #         print('Не удалось получить json из запроса')
+    # except HTTPError:
+    #     error = json.loads(response.text)[ERROR_KEY]
+    #     print(f"error_code={error[ERROR_CODE_KEY]}")
+    #     print(f"error_message={error[ERROR_MESSAGE_KEY]}")
+
+    # # список категорий продуктов берется целиком
+    # print(PRODUCT_GROUPS_URL)
+    # response = requests.get(PRODUCT_GROUPS_URL, headers=headers)
+    # try:
+    #     response.raise_for_status()
+    #     try:
+    #         json_resp = response.json()
+    #         request_is_success = json_resp.get(SUCCESS_KEY)
+    #         if request_is_success:
+    #             print(f'Получено: {json_resp.get("data").get("product_groups_count")}')
+    #             product_groups = json_resp.get('data').get('product_groups')
+    #             json_data = json.dumps(
+    #                 product_groups,
+    #                 indent=4,
+    #                 ensure_ascii=False)
+    #             with open(RESULT_FILE_NAME, 'w', encoding=ENCODING) as f:
+    #                 f.writelines(json_data)
+    #         else:
+    #             error = json_resp[ERROR_KEY]
+    #             print(f"(error_code={error[ERROR_CODE_KEY]}) {error[ERROR_MESSAGE_KEY]}")
+    #     except JSONDecodeError as err:
+    #         print('Не удалось получить json из запроса')
+    # except HTTPError:
+    #     error = json.loads(response.text)[ERROR_KEY]
+    #     print(f"error_code={error[ERROR_CODE_KEY]}")
+    #     print(f"error_message={error[ERROR_MESSAGE_KEY]}")
+
+    # # список параметров продуктов берется целиком
+    # print(PRODUCT_PROPERTIES_URL)
+    # response = requests.get(PRODUCT_PROPERTIES_URL, headers=headers)
+    # try:
+    #     response.raise_for_status()
+    #     try:
+    #         json_resp = response.json()
+    #         request_is_success = json_resp.get(SUCCESS_KEY)
+    #         if request_is_success:
+    #             print(f'Получено: {json_resp.get("data").get("properties_count")}')
+    #             products_properties = json_resp.get('data').get('properties')
+    #             json_data = json.dumps(
+    #                 products_properties,
+    #                 indent=4,
+    #                 ensure_ascii=False)
+    #             with open(RESULT_FILE_NAME, 'w', encoding=ENCODING) as f:
+    #                 f.writelines(json_data)
+    #         else:
+    #             error = json_resp[ERROR_KEY]
+    #             print(f"(error_code={error[ERROR_CODE_KEY]}) {error[ERROR_MESSAGE_KEY]}")
+    #     except JSONDecodeError as err:
+    #         print('Не удалось получить json из запроса')
+    # except HTTPError:
+    #     error = json.loads(response.text)[ERROR_KEY]
+    #     print(f"error_code={error[ERROR_CODE_KEY]}")
+    #     print(f"error_message={error[ERROR_MESSAGE_KEY]}")
