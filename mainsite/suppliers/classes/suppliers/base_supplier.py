@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import List
 
 from ..hierarchical_trees.base_hierarchical_tree import BaseHierarchicalTree
 
@@ -24,7 +25,7 @@ class BaseSupplier(ABC):
         return self.__str__()
 
     @abstractmethod
-    def get_supplier_data(self, params: dict):
+    def get_supplier_data(self, params: dict) -> List:
         """
         Получить данные поставщика с параметрами
         @param params:

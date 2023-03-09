@@ -1,7 +1,7 @@
 import logging
-from typing import List, Tuple
+from typing import List
 
-from .suppliers.base_supplier import BaseSupplier
+from .suppliers.chint_supplier import ChintSupplier
 from .suppliers.dkc_supplier import DKCSupplier
 
 
@@ -12,8 +12,9 @@ class SupplierProvider:
         """
         Инициализация поставщиков
         """
-        self._suppliers: Tuple[BaseSupplier] = (
+        self._suppliers: tuple = (
             DKCSupplier(),
+            ChintSupplier()
         )
 
     def _find_supplier(self, supplier_id: int):

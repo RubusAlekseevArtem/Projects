@@ -1,13 +1,12 @@
 import json
 import logging
-import pprint
 from datetime import datetime
 from json import JSONDecodeError
 
 import requests
 from requests import HTTPError
 
-from private_file import base_url, headers
+from .private_file import base_url, headers
 
 PRODUCTS_URL = f'{base_url}/api/products/'
 PRICES_URL = f'{base_url}/api/prices/'
