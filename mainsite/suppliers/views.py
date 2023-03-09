@@ -92,7 +92,7 @@ def response_by_query_name(request, query_name):
                         print(f'Processing time = {processing_time}')
                         print(f'Average processing time = {average_processing_time}')
                         return FileResponse(buf, status=200, as_attachment=True)
-                    return create_error_json_response('Не удалось достать выбранные данные из данных')
+                    return create_error_json_response('Не удалось достать выбранные данные из списка')
                 return create_error_json_response('Из списка материалов не удалось получить данные из API')
             return create_error_json_response(NO_SUPPLIER_ID_MESSAGE)
         return create_error_json_response(WAS_NOT_QUERY_NAME_MESSAGE)

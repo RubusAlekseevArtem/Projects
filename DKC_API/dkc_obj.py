@@ -171,7 +171,6 @@ class DkcObj:
         if self.access_token:  # if to get access_token
             HEADERS['AccessToken'] = self.access_token
         else:
-            logging.error(DkcAccessTokenError.__doc__)
             raise DkcAccessTokenError()
         self.root_logger = logging.getLogger()
         self.root_logger.setLevel(logging.INFO)
@@ -181,20 +180,17 @@ class DkcObj:
     def __get_access_token(self):
         result = None
         print(self.AUTH_URL)
+        if 'AccessToken' in HEADERS:  # delete if token exists
+            del HEADERS['AccessToken']
+        response = get(self.AUTH_URL, headers=HEADERS)
+        print(f'access_token status_code={response.status_code}')
         try:
-            if 'AccessToken' in HEADERS:  # delete if token exists
-                del HEADERS['AccessToken']
-            response = get(self.AUTH_URL, headers=HEADERS)
-            print(f'access_token status_code={response.status_code}')
+            response.raise_for_status()
             try:
-                response.raise_for_status()
-                try:
-                    result = str(response.json().get('access_token'))
-                except JSONDecodeError as err:
-                    logging.error(err)
-            except HTTPError as err:
+                result = str(response.json().get('access_token'))
+            except JSONDecodeError as err:
                 logging.error(err)
-        except Exception as err:
+        except HTTPError as err:
             logging.error(err)
         return result
 

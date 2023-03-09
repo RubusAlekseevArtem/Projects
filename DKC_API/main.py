@@ -1,8 +1,7 @@
-import dataclasses
 import json
 import pprint
 
-from DKC_API.dkc_obj import DkcObj, DkcAccessTokenError
+from DKC_API.dkc_obj import DkcObj
 from DKC_API.private_file import HEADERS, INDENT
 
 PRINT_TO_CONSOLE = False
@@ -15,7 +14,7 @@ def my_print(data):
 
 def save_to_file(dkc, materials, filename):
     json_data = json.dumps(
-        [dataclasses.asdict(material) for material in materials],
+        [dict(material) for material in materials],
         indent=INDENT,
         ensure_ascii=False
     )
@@ -25,11 +24,11 @@ def save_to_file(dkc, materials, filename):
 
 def get_materials(material_codes, dkc=None):
     if dkc is None:
-        try:
-            dkc = DkcObj()
-            return dkc.get_materials(material_codes)
-        except DkcAccessTokenError as err:
-            my_print(err)
+        # try:
+        dkc = DkcObj()
+        return dkc.get_materials(material_codes)
+        # except DkcAccessTokenError as err:
+        #     my_print(err)
     else:
         return dkc.get_materials(material_codes)
 
@@ -43,6 +42,7 @@ def main():
         materials = get_materials(material_codes, dkc)
         if materials:
             my_print(materials)
+            print(materials)
         save_to_file(dkc, materials, 'load_data.txt')
     else:
         print('Ошибка получения токена для доступа')

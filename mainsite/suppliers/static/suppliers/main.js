@@ -101,9 +101,10 @@ function downloadOnClick() {
             if (response.responseJSON != undefined) {
               const error = response.responseJSON[ERROR];
               show_error(error);
-              console.log(error);
+              //   console.log(error);
+            } else {
+              alert(getErrorMessage(response.status));
             }
-            alert(getErrorMessage(response.status));
           });
       }
     }
@@ -143,6 +144,11 @@ function getErrorMessage(status) {
   switch (status) {
     case 0:
       message = "Нет соединения. Проверьте соединение c сервером";
+      break;
+
+    case 500:
+      message =
+        "Cервер столкнулся с неожиданной ошибкой, которая помешала ему выполнить запрос";
       break;
 
     default:

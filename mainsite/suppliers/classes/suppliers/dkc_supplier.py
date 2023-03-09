@@ -1,4 +1,3 @@
-import logging
 import os.path
 import sys
 
@@ -6,9 +5,10 @@ from ..hierarchical_trees.dkc_hierarchical_tree import DkcHierarchicalTreeParame
 from ..suppliers.base_supplier import BaseSupplier
 from ...models import Supplier
 
-sys.path.append(os.path.abspath(rf'..'))
-
-from DKC_API.main import get_materials, DkcObj, DkcAccessTokenError
+p = os.path.abspath(rf'.')
+# print(p)
+sys.path.append(p)
+from DKC_API.main import get_materials
 
 
 class DKCSupplier(BaseSupplier):
@@ -34,11 +34,5 @@ class DKCSupplier(BaseSupplier):
         """
         material_codes = params.get('material_codes')
         if material_codes:
-            dkc = None  # create dkc obj for all material requests
-            try:
-                dkc = DkcObj()
-            except DkcAccessTokenError as err:
-                print(err)
-                logging.error(err)
-            return get_materials(material_codes, dkc)
+            return get_materials(material_codes)
         return None
