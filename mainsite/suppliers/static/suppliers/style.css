@@ -33,6 +33,7 @@
 .header_h1 {
     padding-bottom: 20px;
     padding-left: 20px;
+    text-align: center;
 }
 
 .content_site {
@@ -54,6 +55,7 @@
 
 .select_margin {
     margin-right: 100px;
+    max-height: 40px;
 }
 
 .select_parameters {
@@ -94,7 +96,8 @@
 
 .tree {
     max-height: 230px;
-    max-width: 600px;
+    max-width: 400px;
+    min-width: 400px;
     overflow-y: scroll;
 }
 

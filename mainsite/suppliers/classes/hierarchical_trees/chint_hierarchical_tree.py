@@ -103,14 +103,14 @@ class ChintHierarchicalTreeParameters(BaseHierarchicalTree):
                 FuncNode('picture', 'Фото',
                          lambda o: get_chint_product(o).get('picture')),
                 FuncNode('documents', 'Документы', get_files)
-                # .add_children(
-                #     [
-                #         FuncNode('url_to_document', 'Ссылка на документ',
-                #                  get_url_to_document),
-                #         FuncNode('document_name', 'Наименование документа', get_document_name),
-                #         FuncNode('document_date', 'Дата действительности документа', get_document_date),
-                #     ]
-                # ),
+                .add_children(
+                    [
+                        FuncNode('url_to_document', 'Ссылка на документ',
+                                 get_url_to_document),
+                        FuncNode('document_name', 'Наименование документа', get_document_name),
+                        FuncNode('document_date', 'Дата действительности документа', get_document_date),
+                    ]
+                ),
             ]
         )
         super().__init__(root_node)
