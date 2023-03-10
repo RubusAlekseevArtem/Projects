@@ -21,7 +21,7 @@ ENCODING = 'UTF-8'
 # строка формата сообщения
 strfmt = '[%(asctime)s] [%(name)s] [%(levelname)s] > %(message)s'
 # строка формата времени
-datefmt = '%Y-%m-%d %H:%M:%S'
+datefmt = '%d:%m:%Y %H:%M:%S'
 # создаем форматтер
 
 dkc_logger = logging.getLogger('dkc_logger')
