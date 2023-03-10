@@ -8,7 +8,7 @@ from ...models import Supplier
 p = os.path.abspath(rf'.')
 # print(p)
 sys.path.append(p)
-from DKC_API.main import get_dkc_materials
+from DKC_API.dkc_catalog_material import get_dkc_materials
 
 
 class DKCSupplier(BaseSupplier):

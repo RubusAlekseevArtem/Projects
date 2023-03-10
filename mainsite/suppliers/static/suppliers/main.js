@@ -84,6 +84,8 @@ function downloadOnClick() {
       if (tree_numbers.length == 0) {
         alert("Выберите параметры.");
       } else {
+        $(".button_input").hide();
+        $(".gif").show();
         $.ajax({
           url: "get_materials_as_file",
           type: "get",
@@ -105,6 +107,10 @@ function downloadOnClick() {
             } else {
               alert(getErrorMessage(response.status));
             }
+          })
+          .always(() => {
+            $(".button_input").show();
+            $(".gif").hide();
           });
       }
     }
