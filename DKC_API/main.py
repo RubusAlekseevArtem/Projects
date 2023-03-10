@@ -23,10 +23,6 @@ def save_to_file(materials, filename):
         f.writelines(json_data)
 
 
-def get_materials(material_codes):
-    return get_dkc_materials(material_codes)
-
-
 if __name__ == '__main__':
     material_codes = ['4400003']
     materials = get_dkc_materials(material_codes)
