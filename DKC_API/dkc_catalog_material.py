@@ -195,7 +195,7 @@ def set_access_token_in_headers_or_raise(access_token=__get_dkc_access_token()):
         raise DkcErrorAccessToken()
 
 
-def get_dkc_materials(material_codes: List[str], print_to_console=False):
+def get_dkc_materials(material_codes: List[str], print_to_console=True):
     result_materials = []
     try:
         set_access_token_in_headers_or_raise()

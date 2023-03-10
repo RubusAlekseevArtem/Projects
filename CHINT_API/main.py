@@ -27,7 +27,7 @@ LIMIT = 25  # available -> [0, 25, 50, 100]
 # class ProductGetValues(BaseGetValues):
 
 
-def get_product(vendor_code):
+def get_product(vendor_code, print_to_console=True):
     params = {
         'limit': LIMIT,
         'vendor_code': vendor_code,
@@ -38,31 +38,37 @@ def get_product(vendor_code):
         # 'xml': 0, # default 0 == not xml result format
     }
     response = requests.get(PRODUCTS_URL, headers=headers, params=params)
-    # print(f'status_code={response.status_code}')
-    # print(json.dumps(dict(response.headers), indent=4)) # headers
+    # if print_to_console:
+    #     print(f'status_code={response.status_code}')
+    # if print_to_console:
+    #     print(json.dumps(dict(response.headers), indent=4)) # headers
     try:
         response.raise_for_status()
         try:
             json_resp = response.json()
             request_is_success = json_resp.get(SUCCESS_KEY)
             if request_is_success:
-                print(f"{vendor_code} - получен")
+                if print_to_console:
+                    print(f"{vendor_code} - получен")
                 return json_resp
             else:
                 error = json_resp[ERROR_KEY]
-                print(f"{vendor_code} - (error_code={error[ERROR_CODE_KEY]}) {error[ERROR_MESSAGE_KEY]}")
+                if print_to_console:
+                    print(f"{vendor_code} - (error_code={error[ERROR_CODE_KEY]}) {error[ERROR_MESSAGE_KEY]}")
         except JSONDecodeError as err:
-            print('Не удалось получить json из запроса')
-            print(err)
+            if print_to_console:
+                print('Не удалось получить json из запроса')
+                print(err)
             logging.error(err)
     except HTTPError:
         error = json.loads(response.text)[ERROR_KEY]
-        print(f"error_code={error[ERROR_CODE_KEY]}")
-        print(f"error_message={error[ERROR_MESSAGE_KEY]}")
+        if print_to_console:
+            print(f"error_code={error[ERROR_CODE_KEY]}")
+            print(f"error_message={error[ERROR_MESSAGE_KEY]}")
     return None
 
 
-def get_products(vendor_codes):
+def get_products(vendor_codes, print_to_console=True):
     def create_product(product_json_obj):
         prod = product_json_obj.get('data').get('products')[0]
         # pprint.pprint(product)
@@ -71,7 +77,7 @@ def get_products(vendor_codes):
     result = []
     t1 = datetime.now()
     for vendor_code in vendor_codes:
-        product = get_product(vendor_code)
+        product = get_product(vendor_code, print_to_console)
         if product:
             result.append(create_product(product))
     t2 = datetime.now()
