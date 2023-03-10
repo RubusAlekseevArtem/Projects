@@ -55,9 +55,9 @@ class SupplierProvider:
 
     def get_filter_data_by_tree_numbers(self, supplier_id: int,
                                         supplier_data: List[dict],
-                                        tree_numbers: List[str]) -> List | None:
+                                        tree_numbers: List[str]):
         if self.supplier_not_exists(supplier_id):
-            return
+            return None
         supplier = self._find_supplier(supplier_id)
         if supplier:
             result = []
@@ -76,3 +76,4 @@ class SupplierProvider:
                         logging.error(message)
                 result.append(result_obj)
             return result
+        return None
