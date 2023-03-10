@@ -1,7 +1,7 @@
 import json
 import pprint
 
-from DKC_API.dkc_obj import DkcObj
+from DKC_API.dkc_catalog_material import DkcObj
 from DKC_API.private_file import HEADERS, INDENT
 
 PRINT_TO_CONSOLE = False
@@ -18,7 +18,7 @@ def save_to_file(dkc, materials, filename):
         indent=INDENT,
         ensure_ascii=False
     )
-    with open(filename, mode='w', encoding=dkc.base_encoding) as f:
+    with open(filename, mode='w', encoding=dkc.ENCODING) as f:
         f.writelines(json_data)
 
 

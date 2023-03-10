@@ -1,8 +1,9 @@
 import logging
+from timeit import timeit
 from typing import List
 
 from requests import HTTPError, get, JSONDecodeError, Response
-from DKC_API.private_file import HEADERS, BASE_URL, MASTER_KEY
+from DKC_API.private_file import HEADERS, BASE_URL, AUTHORIZATION_URL
 
 # !!! don't change !!!
 MATERIAL_NAME = 'material'
@@ -14,6 +15,23 @@ DRAWINGS_SKETCH_NAME = 'drawings_sketch'
 DESCRIPTION_NAME = 'description'
 ANALOGS_NAME = 'analogs'
 SPECIFICATION_NAME = 'specification'
+ACCESS_TOKEN_KEY = 'AccessToken'
+
+ENCODING = 'UTF-8'
+# строка формата сообщения
+strfmt = '[%(asctime)s] [%(name)s] [%(levelname)s] > %(message)s'
+# строка формата времени
+datefmt = '%Y-%m-%d %H:%M:%S'
+# создаем форматтер
+
+dkc_logger = logging.getLogger('dkc_logger')
+dkc_logger.setLevel(logging.INFO)
+
+handler = logging.FileHandler('dkc.log', 'w', ENCODING)
+formatter = logging.Formatter(fmt=strfmt, datefmt=datefmt)
+handler.setFormatter(formatter)
+
+dkc_logger.addHandler(handler)
 
 
 def get_catalog_material_response(
@@ -28,9 +46,9 @@ def get_catalog_material_response(
     :param catalog_path: Путь к запросам по материалу
     :return: Response or None
     """
-    material_url = f'{BASE_URL}/catalog/material{catalog_path}?code={material_code}'
-    logging.info(f'{log_info} (from {material_url})')
-    return get(material_url, headers=HEADERS)
+    url = f'{BASE_URL}/catalog/material{catalog_path}?code={material_code}'
+    dkc_logger.info(f'{log_info} (from {url})')
+    return get(url, headers=HEADERS)
 
 
 def get_material_response(material_code: str):
@@ -77,7 +95,7 @@ def get_drawings_sketch_response(material_code: str):
     return get_catalog_material_response(
         material_code,
         '/drawings/sketch',
-        'Get material drawings sketch'
+        f'Get material {DRAWINGS_SKETCH_NAME}'
     )
 
 
@@ -136,73 +154,89 @@ def create_material(material_response: Response, material_code: str):
         }
     except JSONDecodeError as err:
         print(err)
-        logging.error(err)
+        dkc_logger.error(err)
     except AttributeError as err:
         print(f'Нет ответа по коду - \'{material_code}\'')
-        logging.error(err)
+        dkc_logger.error(err)
 
 
 def get_material_or_error(material_code: str):
     material_response = get_material_response(material_code)
     try:
         material_response.raise_for_status()
-    except HTTPError as err:
-        error_message = material_response.json().get("message")
+    except HTTPError:
+        error_message = material_response.json().get('message')
         error = f'Ошибка по коду \'{material_code}\': ' \
                 f'({material_response.status_code}) - {error_message}'
-        logging.error(err)
         return error
     return create_material(material_response, material_code)
 
 
-class DkcAccessTokenError(Exception):
+def __get_dkc_access_token():
+    result = None
+    response = get(AUTHORIZATION_URL)
+    try:
+        response.raise_for_status()
+        try:
+            result = str(response.json().get('access_token'))
+        except JSONDecodeError as err:
+            dkc_logger.error(err)
+    except HTTPError as err:
+        dkc_logger.error(err)
+    return result
+
+
+def set_access_token_in_headers_or_raise(access_token=__get_dkc_access_token()):
+    # if ACCESS_TOKEN_KEY in HEADERS:
+    #     del HEADERS[ACCESS_TOKEN_KEY]
+    if access_token:  # if to get access_token
+        HEADERS[ACCESS_TOKEN_KEY] = access_token
+    else:
+        raise DkcErrorAccessToken()
+
+
+def get_materials(material_codes: List[str], print_log=False):
+    result_materials = []
+    try:
+        set_access_token_in_headers_or_raise()
+        for material_code in material_codes:
+            material_or_error = get_material_or_error(material_code)
+            if isinstance(material_or_error, dict):
+                if print_log:
+                    print(f'Материал с кодом \'{material_code}\' получен.')
+                result_materials.append(material_or_error)
+            else:
+                if print_log:
+                    print(material_or_error)
+                dkc_logger.info(material_or_error)
+        dkc_logger.info(f'-' * 100)
+    except DkcErrorAccessToken as err:
+        dkc_logger.error(err)
+    return result_materials
+
+
+class DkcErrorAccessToken(Exception):
     """Error getting access token to DKC API"""
 
     def __init__(self):
         super().__init__(self.__doc__)
 
 
-class DkcObj:
-
-    def __init__(self):
-        self.base_encoding = 'UTF-8'
-        self.AUTH_URL = f'{BASE_URL}/auth.access.token/{MASTER_KEY}'
-        self.access_token = self.__get_access_token()
-        if self.access_token:  # if to get access_token
-            HEADERS['AccessToken'] = self.access_token
-        else:
-            raise DkcAccessTokenError()
-        self.root_logger = logging.getLogger()
-        self.root_logger.setLevel(logging.INFO)
-        handler = logging.FileHandler('dkc.log', 'w', self.base_encoding)
-        self.root_logger.addHandler(handler)
-
-    def __get_access_token(self):
-        result = None
-        print(self.AUTH_URL)
-        if 'AccessToken' in HEADERS:  # delete if token exists
-            del HEADERS['AccessToken']
-        response = get(self.AUTH_URL, headers=HEADERS)
-        print(f'access_token status_code={response.status_code}')
-        try:
-            response.raise_for_status()
-            try:
-                result = str(response.json().get('access_token'))
-            except JSONDecodeError as err:
-                logging.error(err)
-        except HTTPError as err:
-            logging.error(err)
-        return result
-
-    def get_materials(self, material_codes: List[str]):
-        result = []
-        for material_code in material_codes:
-            material_or_error = get_material_or_error(material_code)
-            if isinstance(material_or_error, dict):
-                print(f'Материал с кодом \'{material_code}\' получен.')
-                result.append(material_or_error)
-            else:
-                print(material_or_error)
-                logging.info(material_or_error)
-        logging.info(f'-' * 100)
-        return result
+if __name__ == '__main__':
+    codes = [
+        '4400003',
+        '4400013',
+        'R5ST0231',
+        '4400003',
+        '4400013',
+        'R5ST0231',
+        '4400003',
+        '4400013',
+        'R5ST0231',
+        '4400003',
+    ]
+    num = 10
+    execute_time = timeit('get_materials(codes, False)', globals=globals(), number=num)
+    print(f'codes_len={len(codes)} num={num} execute_time={execute_time} avg={execute_time / num}')
+    # codes_len=10 num=1 execute_time=29.72600089944899 avg=29.72600089944899
+    #
