@@ -195,7 +195,7 @@ def set_access_token_in_headers_or_raise(access_token=__get_dkc_access_token()):
         raise DkcErrorAccessToken()
 
 
-def get_materials(material_codes: List[str], print_log=False):
+def get_dkc_materials(material_codes: List[str], print_log=False):
     result_materials = []
     try:
         set_access_token_in_headers_or_raise()
@@ -239,4 +239,4 @@ if __name__ == '__main__':
     execute_time = timeit('get_materials(codes, False)', globals=globals(), number=num)
     print(f'codes_len={len(codes)} num={num} execute_time={execute_time} avg={execute_time / num}')
     # codes_len=10 num=1 execute_time=29.72600089944899 avg=29.72600089944899
-    #
+    # codes_len=10 num=10 execute_time=278.3641758998856 avg=27.83641758998856
