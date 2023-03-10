@@ -82,6 +82,10 @@ def get_products(vendor_codes):
 
 if __name__ == '__main__':
     print(PRODUCTS_URL)
+    # 521527
+    # 521525
+    # 521367
+    # 521111
     codes = [521527, 521525, 521367, 521111]
     products = get_products(codes)
     json_data = json.dumps(
