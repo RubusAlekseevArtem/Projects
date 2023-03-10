@@ -537,8 +537,6 @@ g
 ^venv/Lib/site-packages/django/contrib/contenttypes/migrations/0002_remove_content_type_name.py,a\1\a1dc6ebc177f58e8452f688884b1ffe0e04e595d
 `
 0venv/Lib/site-packages/django/core/validators.py,5\8\5840aafd8d4c37cde798f624db51cfb6f11c78f0
-w
-Gmainsite/suppliers/classes/hierarchical_trees/base_hierarchical_tree.py,d\f\df838b81da015c9e7cbe9000612e0dfa51eb30b5
 :
 
 .gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
