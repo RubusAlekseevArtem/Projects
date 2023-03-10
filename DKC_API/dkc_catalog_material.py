@@ -195,23 +195,29 @@ def set_access_token_in_headers_or_raise(access_token=__get_dkc_access_token()):
         raise DkcErrorAccessToken()
 
 
-def get_dkc_materials(material_codes: List[str], print_log=False):
+def get_dkc_materials(material_codes: List[str], print_to_console=False):
     result_materials = []
     try:
         set_access_token_in_headers_or_raise()
         for material_code in material_codes:
             material_or_error = get_material_or_error(material_code)
             if isinstance(material_or_error, dict):
-                if print_log:
+                if print_to_console:
                     print(f'Материал с кодом \'{material_code}\' получен.')
                 result_materials.append(material_or_error)
             else:
-                if print_log:
+                if print_to_console:
                     print(material_or_error)
                 dkc_logger.info(material_or_error)
         dkc_logger.info(f'-' * 100)
     except DkcErrorAccessToken as err:
         dkc_logger.error(err)
+        if print_to_console:
+            print(err)
+    except TimeoutError as err:
+        dkc_logger.error(err)
+        if print_to_console:
+            print(err)
     return result_materials
 
 
@@ -225,18 +231,18 @@ class DkcErrorAccessToken(Exception):
 if __name__ == '__main__':
     codes = [
         '4400003',
-        '4400013',
-        'R5ST0231',
-        '4400003',
-        '4400013',
-        'R5ST0231',
-        '4400003',
-        '4400013',
-        'R5ST0231',
-        '4400003',
+        # '4400013',
+        # 'R5ST0231',
+        # '4400003',
+        # '4400013',
+        # 'R5ST0231',
+        # '4400003',
+        # '4400013',
+        # 'R5ST0231',
+        # '4400003',
     ]
-    num = 10
-    execute_time = timeit('get_materials(codes, False)', globals=globals(), number=num)
+    num = 1
+    execute_time = timeit('get_dkc_materials(codes, False)', globals=globals(), number=num)
     print(f'codes_len={len(codes)} num={num} execute_time={execute_time} avg={execute_time / num}')
     # codes_len=10 num=1 execute_time=29.72600089944899 avg=29.72600089944899
     # codes_len=10 num=10 execute_time=278.3641758998856 avg=27.83641758998856
