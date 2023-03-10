@@ -8,7 +8,7 @@ from ...models import Supplier
 p = os.path.abspath(rf'.')
 # print(p)
 sys.path.append(p)
-from DKC_API.main import get_materials
+from DKC_API.main import get_dkc_materials
 
 
 class DKCSupplier(BaseSupplier):
@@ -34,5 +34,5 @@ class DKCSupplier(BaseSupplier):
         """
         material_codes = params.get('material_codes')
         if material_codes:
-            return get_materials(material_codes)
+            return get_dkc_materials(material_codes)
         return []
